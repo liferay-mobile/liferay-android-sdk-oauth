@@ -1,0 +1,44 @@
+apply plugin: 'com.android.application'
+apply plugin: 'idea'
+
+android {
+	compileSdkVersion 21
+	buildToolsVersion '21.1.1'
+
+	packagingOptions {
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/NOTICE'
+	}
+
+	defaultConfig {
+		applicationId "com.liferay.mobile.sample"
+		minSdkVersion 21
+		targetSdkVersion 21
+		versionCode 1
+		versionName "1.0"
+	}
+}
+
+configurations {
+	formatter
+}
+
+dependencies {
+	compile group: 'com.liferay.mobile', name: 'liferay-android-sdk', version: '6.2.0.9'
+
+	formatter group: 'com.liferay.portal', name: 'portal-impl', version: '6.2.0-ga1'
+	formatter group: 'com.liferay.portal', name: 'portal-service', version: '6.2.0-ga1'
+	formatter group: 'com.liferay.portal', name: 'util-java', version: '6.2.0-ga1'
+	formatter group: 'dom4j', name: 'dom4j', version: '1.6.1'
+	formatter group: 'org.apache.ant', name: 'ant', version: '1.8.2'
+}
+
+task format(type: JavaExec) {
+	main = 'com.liferay.portal.tools.sourceformatter.SourceFormatter'
+	classpath = configurations.formatter
+	workingDir = 'src'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.2.1'
+}
