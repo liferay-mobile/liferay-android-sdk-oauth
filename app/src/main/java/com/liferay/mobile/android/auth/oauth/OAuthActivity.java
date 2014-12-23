@@ -36,7 +36,7 @@ import com.liferay.mobile.android.task.oauth.RequestTokenAsyncTask;
  */
 public class OAuthActivity extends Activity {
 
-	public static final String ACTION_TOKEN = "ACTION_TOKEN";
+	public static final String ACTION_SUCCESS = "ACTION_SUCCESS";
 
 	public static final String EXTRA_OAUTH_CONFIG = "EXTRA_OAUTH_CONFIG";
 
@@ -82,6 +82,15 @@ public class OAuthActivity extends Activity {
 		task.execute();
 	}
 
+	protected void onSuccess() {
+		Intent intent = new Intent();
+		intent.putExtra(EXTRA_OAUTH_CONFIG, _config);
+
+		setResult(RESULT_OK, intent);
+
+		finish();
+	}
+
 	protected void registerReceiver() {
 		_receiver = new BroadcastReceiver() {
 
@@ -89,25 +98,18 @@ public class OAuthActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 
-				if (ACTION_TOKEN.equals(action)) {
-					OAuthActivity.this.setResult();
+				if (ACTION_SUCCESS.equals(action)) {
+					OAuthActivity.this.onSuccess();
 				}
 			}
 
 		};
 
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(ACTION_TOKEN);
+		filter.addAction(ACTION_SUCCESS);
 
 		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
 		manager.registerReceiver(_receiver, filter);
-	}
-
-	protected void setResult() {
-		Intent intent = new Intent();
-		intent.putExtra(EXTRA_OAUTH_CONFIG, _config);
-		setResult(RESULT_OK, intent);
-		finish();
 	}
 
 	private OAuthConfig _config;

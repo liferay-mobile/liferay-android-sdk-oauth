@@ -55,7 +55,7 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void result) {
-		Intent intent = new Intent(OAuthActivity.ACTION_TOKEN);
+		Intent intent = new Intent(OAuthActivity.ACTION_SUCCESS);
 		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
 	}
 
