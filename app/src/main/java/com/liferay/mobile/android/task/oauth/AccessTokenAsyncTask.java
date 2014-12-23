@@ -14,8 +14,14 @@
 
 package com.liferay.mobile.android.task.oauth;
 
+import android.content.Context;
+import android.content.Intent;
+
 import android.os.AsyncTask;
 
+import android.support.v4.content.LocalBroadcastManager;
+
+import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 
 import oauth.signpost.OAuthConsumer;
@@ -26,7 +32,8 @@ import oauth.signpost.OAuthProvider;
  */
 public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
-	public AccessTokenAsyncTask(OAuthConfig config) {
+	public AccessTokenAsyncTask(Context context, OAuthConfig config) {
+		_context = context.getApplicationContext();
 		_config = config;
 	}
 
@@ -48,11 +55,11 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void result) {
-		OAuthConsumer consumer = _config.getConsumer();
-		String token = consumer.getToken();
-		String tokenSecret = consumer.getTokenSecret();
+		Intent intent = new Intent(OAuthActivity.ACTION_TOKEN);
+		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
 	}
 
 	private OAuthConfig _config;
+	private Context _context;
 
 }

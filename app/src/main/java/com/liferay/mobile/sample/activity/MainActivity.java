@@ -24,13 +24,30 @@ import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 import com.liferay.mobile.sample.R;
 
+import oauth.signpost.OAuthConsumer;
+
 /**
  * @author Bruno Farache
  */
 public class MainActivity extends Activity {
 
+	public static int AUTHENTICATE_REQUEST_CODE = 1;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onActivityResult(int request, int result, Intent intent) {
+		if ((request == AUTHENTICATE_REQUEST_CODE) && (result == RESULT_OK)) {
+			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
+				OAuthActivity.EXTRA_OAUTH_CONFIG);
+
+			OAuthConsumer consumer = config.getConsumer();
+
+			System.out.println("Token: " + consumer.getToken());
+			System.out.println("Token secret: " + consumer.getTokenSecret());
+		}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
@@ -42,7 +59,7 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, OAuthActivity.class);
 		intent.putExtra(OAuthActivity.EXTRA_OAUTH_CONFIG, config);
 
-		startActivity(intent);
+		startActivityForResult(intent, AUTHENTICATE_REQUEST_CODE);
 	}
 
 }
