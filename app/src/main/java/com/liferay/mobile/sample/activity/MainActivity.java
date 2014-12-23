@@ -16,8 +16,11 @@ package com.liferay.mobile.sample.activity;
 
 import android.app.Activity;
 
+import android.content.Intent;
+
 import android.os.Bundle;
 
+import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.sample.R;
 
 /**
@@ -30,6 +33,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
+
+		Intent intent = new Intent(this, OAuthActivity.class);
+		startActivity(intent);
 	}
 
 }
