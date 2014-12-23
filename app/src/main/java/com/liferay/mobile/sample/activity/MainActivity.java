@@ -24,8 +24,6 @@ import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 import com.liferay.mobile.sample.R;
 
-import oauth.signpost.OAuthConsumer;
-
 /**
  * @author Bruno Farache
  */
@@ -39,10 +37,12 @@ public class MainActivity extends Activity {
 			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
 				OAuthActivity.EXTRA_OAUTH_CONFIG);
 
-			OAuthConsumer consumer = config.getConsumer();
+			System.out.println("Consumer key: " + config.getConsumerKey());
+			System.out.println(
+				"Consumer secret: " + config.getConsumerSecret());
 
-			System.out.println("Token: " + consumer.getToken());
-			System.out.println("Token secret: " + consumer.getTokenSecret());
+			System.out.println("Token: " + config.getToken());
+			System.out.println("Token secret: " + config.getTokenSecret());
 		}
 	}
 

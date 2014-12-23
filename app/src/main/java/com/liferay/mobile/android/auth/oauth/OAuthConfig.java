@@ -30,79 +30,111 @@ public class OAuthConfig implements Serializable {
 
 	public static final String AUTHORIZE_URL = "/c/portal/oauth/authorize";
 
+	public static final String CALLBACK_URL = "liferay://callback";
+
 	public static final String REQUEST_URL = "/c/portal/oauth/request_token";
 
 	public OAuthConfig(
 		String server, String consumerKey, String consumerSecret) {
 
-		this.server = server;
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
+		this(server, consumerKey, consumerSecret, CALLBACK_URL);
 	}
 
-	public String getAccessURL() {
-		StringBuilder sb = new StringBuilder(server);
+	public OAuthConfig(
+		String server, String consumerKey, String consumerSecret,
+		String callbackURL) {
+
+		_server = server;
+		_consumerKey = consumerKey;
+		_consumerSecret = consumerSecret;
+		_callbackURL = callbackURL;
+	}
+
+	public String getCallbackURL() {
+		return _callbackURL;
+	}
+
+	public OAuthConsumer getConsumer() {
+		if (_consumer == null) {
+			_consumer = new CommonsHttpOAuthConsumer(
+				_consumerKey, _consumerSecret);
+		}
+
+		return _consumer;
+	}
+
+	public String getConsumerKey() {
+		return _consumerKey;
+	}
+
+	public String getConsumerSecret() {
+		return _consumerSecret;
+	}
+
+	public OAuthProvider getProvider() {
+		if (_provider == null) {
+			String requestURL = getRequestURL();
+			String accessURL = getAccessURL();
+			String authorizeURL = getAuthorizeURL();
+
+			_provider = new CommonsHttpOAuthProvider(
+				requestURL, accessURL, authorizeURL);
+		}
+
+		return _provider;
+	}
+
+	public String getToken() {
+		if (_consumer == null) {
+			return null;
+		}
+
+		return _consumer.getToken();
+	}
+
+	public String getTokenSecret() {
+		if (_consumer == null) {
+			return null;
+		}
+
+		return _consumer.getTokenSecret();
+	}
+
+	public String getVerifier() {
+		return _verifier;
+	}
+
+	public void setVerifier(String verifier) {
+		_verifier = verifier;
+	}
+
+	protected String getAccessURL() {
+		StringBuilder sb = new StringBuilder(_server);
 		sb.append(ACCESS_URL);
 
 		return sb.toString();
 	}
 
-	public String getAuthorizeURL() {
-		StringBuilder sb = new StringBuilder(server);
+	protected String getAuthorizeURL() {
+		StringBuilder sb = new StringBuilder(_server);
 		sb.append(AUTHORIZE_URL);
 
 		return sb.toString();
 	}
 
-	public String getCallbackURL() {
-		return "liferay://callback";
-	}
-
-	public OAuthConsumer getConsumer() {
-		if (consumer == null) {
-			consumer = new CommonsHttpOAuthConsumer(
-				getConsumerKey(), getConsumerSecret());
-		}
-
-		return consumer;
-	}
-
-	public String getConsumerKey() {
-		return consumerKey;
-	}
-
-	public String getConsumerSecret() {
-		return consumerSecret;
-	}
-
-	public OAuthProvider getProvider() {
-		if (provider == null) {
-			provider = new CommonsHttpOAuthProvider(
-				getRequestURL(), getAccessURL(), getAuthorizeURL());
-		}
-
-		return provider;
-	}
-
-	public String getRequestURL() {
-		StringBuilder sb = new StringBuilder(server);
+	protected String getRequestURL() {
+		StringBuilder sb = new StringBuilder(_server);
 		sb.append(REQUEST_URL);
 
 		return sb.toString();
 	}
 
-	public String getVerifier() {
-		return verifier;
-	}
-
-	public void setVerifier(String verifier) {
-		this.verifier = verifier;
-	} protected String consumerKey;
-
-	protected OAuthConsumer consumer;
-	protected String consumerSecret;
-	protected OAuthProvider provider;
-	protected String server;
-	protected String verifier;
+	private String _callbackURL;
+	private OAuthConsumer _consumer;
+	private String _consumerKey;
+	private String _consumerSecret;
+	private OAuthProvider _provider;
+	private String _server;
+	private String _verifier;
 
 }
