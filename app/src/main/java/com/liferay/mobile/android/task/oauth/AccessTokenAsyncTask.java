@@ -21,6 +21,8 @@ import android.os.AsyncTask;
 
 import android.support.v4.content.LocalBroadcastManager;
 
+import android.util.Log;
+
 import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 
@@ -47,7 +49,7 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 			provider.retrieveAccessToken(consumer, verifier);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Log.e(_TAG, "Could not retrieve access token.", e);
 		}
 
 		return null;
@@ -58,6 +60,9 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 		Intent intent = new Intent(OAuthActivity.ACTION_SUCCESS);
 		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
 	}
+
+	private static final String _TAG =
+		AccessTokenAsyncTask.class.getSimpleName();
 
 	private OAuthConfig _config;
 	private Context _context;

@@ -21,6 +21,8 @@ import android.net.Uri;
 
 import android.os.AsyncTask;
 
+import android.util.Log;
+
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 
 import oauth.signpost.OAuthConsumer;
@@ -48,7 +50,7 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 				consumer, _config.getCallbackURL());
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Log.e(_TAG, "Could not retrieve request token.", e);
 		}
 
 		return URL;
@@ -61,6 +63,9 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
 		_context.startActivity(intent);
 	}
+
+	private static final String _TAG =
+		RequestTokenAsyncTask.class.getSimpleName();
 
 	private OAuthConfig _config;
 	private Context _context;

@@ -20,6 +20,8 @@ import android.content.Intent;
 
 import android.os.Bundle;
 
+import android.util.Log;
+
 import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 import com.liferay.mobile.sample.R;
@@ -37,12 +39,10 @@ public class MainActivity extends Activity {
 			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
 				OAuthActivity.EXTRA_OAUTH_CONFIG);
 
-			System.out.println("Consumer key: " + config.getConsumerKey());
-			System.out.println(
-				"Consumer secret: " + config.getConsumerSecret());
-
-			System.out.println("Token: " + config.getToken());
-			System.out.println("Token secret: " + config.getTokenSecret());
+			Log.d(_TAG, "Consumer key: " + config.getConsumerKey());
+			Log.d(_TAG, "Consumer secret: " + config.getConsumerSecret());
+			Log.d(_TAG, "Token: " + config.getToken());
+			Log.d(_TAG, "Token secret: " + config.getTokenSecret());
 		}
 	}
 
@@ -61,5 +61,7 @@ public class MainActivity extends Activity {
 
 		startActivityForResult(intent, AUTHENTICATE_REQUEST_CODE);
 	}
+
+	private static final String _TAG = MainActivity.class.getSimpleName();
 
 }
