@@ -42,18 +42,21 @@ public class OAuthActivity extends Activity {
 		OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
 			EXTRA_OAUTH_CONFIG);
 
-		if (config != null) {
-			_config = config;
-		}
-
-		Uri uri = intent.getData();
-
-		if (uri == null) {
-			AsyncTask task = new RequestTokenAsyncTask(this, _config);
-			task.execute();
+		if (config == null) {
+			finish();
 
 			return;
 		}
+
+		_config = config;
+
+		AsyncTask task = new RequestTokenAsyncTask(this, _config);
+		task.execute();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Uri uri = intent.getData();
 
 		String verifier = uri.getQueryParameter("oauth_verifier");
 		_config.setVerifier(verifier);
@@ -62,6 +65,6 @@ public class OAuthActivity extends Activity {
 		task.execute();
 	}
 
-	private static OAuthConfig _config;
+	private OAuthConfig _config;
 
 }
