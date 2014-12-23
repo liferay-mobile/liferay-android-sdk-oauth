@@ -16,6 +16,8 @@ package com.liferay.mobile.android.auth.oauth;
 
 import android.app.Activity;
 
+import android.content.Intent;
+
 import android.net.Uri;
 
 import android.os.AsyncTask;
@@ -29,35 +31,34 @@ import com.liferay.mobile.android.task.oauth.RequestTokenAsyncTask;
  */
 public class OAuthActivity extends Activity {
 
-	public OAuthConfig getConfig() {
-		if (_config == null) {
-			_config = new OAuthConfig(
-				"http://192.168.56.1:8080",
-				"abb49e76-aafb-405a-8619-76be986e6752",
-				"525041f5b3f8f248643c31dd384637ed");
-		}
-
-		return _config;
-	}
+	public static final String EXTRA_OAUTH_CONFIG = "EXTRA_OAUTH_CONFIG";
 
 	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
 
-		Uri uri = getIntent().getData();
+		Intent intent = getIntent();
+
+		OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
+			EXTRA_OAUTH_CONFIG);
+
+		if (config != null) {
+			_config = config;
+		}
+
+		Uri uri = intent.getData();
 
 		if (uri == null) {
-			AsyncTask task = new RequestTokenAsyncTask(this, getConfig());
+			AsyncTask task = new RequestTokenAsyncTask(this, _config);
 			task.execute();
 
 			return;
 		}
 
-		OAuthConfig config = getConfig();
 		String verifier = uri.getQueryParameter("oauth_verifier");
-		config.setVerifier(verifier);
+		_config.setVerifier(verifier);
 
-		AccessTokenAsyncTask task = new AccessTokenAsyncTask(config);
+		AccessTokenAsyncTask task = new AccessTokenAsyncTask(_config);
 		task.execute();
 	}
 

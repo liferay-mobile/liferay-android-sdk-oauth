@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.liferay.mobile.android.auth.oauth.OAuthActivity;
+import com.liferay.mobile.android.auth.oauth.OAuthConfig;
 import com.liferay.mobile.sample.R;
 
 /**
@@ -34,7 +35,13 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
+		OAuthConfig config = new OAuthConfig(
+			"http://192.168.56.1:8080", "abb49e76-aafb-405a-8619-76be986e6752",
+			"525041f5b3f8f248643c31dd384637ed");
+
 		Intent intent = new Intent(this, OAuthActivity.class);
+		intent.putExtra(OAuthActivity.EXTRA_OAUTH_CONFIG, config);
+
 		startActivity(intent);
 	}
 

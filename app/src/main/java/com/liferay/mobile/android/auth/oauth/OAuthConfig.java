@@ -14,6 +14,8 @@
 
 package com.liferay.mobile.android.auth.oauth;
 
+import java.io.Serializable;
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -22,7 +24,7 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 /**
  * @author Bruno Farache
  */
-public class OAuthConfig {
+public class OAuthConfig implements Serializable {
 
 	public static final String ACCESS_URL = "/c/portal/oauth/access_token";
 
