@@ -5,7 +5,7 @@
 	tools:context=".MainActivity">
 
 	<TextView
-		android:text="Hello!"
+		android:id="@+id/sites"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" />
 </RelativeLayout>

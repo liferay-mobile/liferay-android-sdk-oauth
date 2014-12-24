@@ -22,16 +22,28 @@ import android.os.Bundle;
 
 import android.util.Log;
 
+import android.widget.TextView;
+
+import com.liferay.mobile.android.auth.oauth.OAuth;
 import com.liferay.mobile.android.auth.oauth.OAuthActivity;
 import com.liferay.mobile.android.auth.oauth.OAuthConfig;
+import com.liferay.mobile.android.service.Session;
+import com.liferay.mobile.android.service.SessionImpl;
+import com.liferay.mobile.android.task.callback.AsyncTaskCallback;
+import com.liferay.mobile.android.task.callback.typed.JSONArrayAsyncTaskCallback;
+import com.liferay.mobile.android.v62.group.GroupService;
 import com.liferay.mobile.sample.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author Bruno Farache
  */
 public class MainActivity extends Activity {
 
-	public static int AUTHENTICATE_REQUEST_CODE = 1;
+	public static final int AUTHENTICATE_REQUEST_CODE = 1;
 
 	@Override
 	public void onActivityResult(int request, int result, Intent intent) {
@@ -39,10 +51,32 @@ public class MainActivity extends Activity {
 			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
 				OAuthActivity.EXTRA_OAUTH_CONFIG);
 
-			Log.d(_TAG, "Consumer key: " + config.getConsumerKey());
-			Log.d(_TAG, "Consumer secret: " + config.getConsumerSecret());
-			Log.d(_TAG, "Token: " + config.getToken());
-			Log.d(_TAG, "Token secret: " + config.getTokenSecret());
+			String consumerKey = config.getConsumerKey();
+			String consumerSecret = config.getConsumerSecret();
+			String token = config.getToken();
+			String tokenSecret = config.getTokenSecret();
+
+			Log.d(_TAG, "Consumer key: " + consumerKey);
+			Log.d(_TAG, "Consumer secret: " + consumerSecret);
+			Log.d(_TAG, "Token: " + token);
+			Log.d(_TAG, "Token secret: " + tokenSecret);
+
+			String server = getString(R.string.server);
+
+			OAuth auth = new OAuth(
+				consumerKey, consumerSecret, token, tokenSecret);
+
+			AsyncTaskCallback callback = _getPrintSitesCallback();
+
+			Session session = new SessionImpl(server, auth, callback);
+			GroupService service = new GroupService(session);
+
+			try {
+				service.getUserSites();
+			}
+			catch (Exception e) {
+				Log.e(_TAG, "Error during service call", e);
+			}
 		}
 	}
 
@@ -52,14 +86,48 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
+		String server = getString(R.string.server);
+		String consumerKey = getString(R.string.consumer_key);
+		String consumerSecret = getString(R.string.consumer_secret);
+
 		OAuthConfig config = new OAuthConfig(
-			"http://192.168.56.1:8080", "abb49e76-aafb-405a-8619-76be986e6752",
-			"525041f5b3f8f248643c31dd384637ed");
+			server, consumerKey, consumerSecret);
 
 		Intent intent = new Intent(this, OAuthActivity.class);
 		intent.putExtra(OAuthActivity.EXTRA_OAUTH_CONFIG, config);
 
 		startActivityForResult(intent, AUTHENTICATE_REQUEST_CODE);
+	}
+
+	private AsyncTaskCallback _getPrintSitesCallback() {
+		final TextView textView = (TextView)findViewById(R.id.sites);
+
+		return new JSONArrayAsyncTaskCallback() {
+
+			@Override
+			public void onSuccess(JSONArray sites) {
+				try {
+					StringBuilder sb = new StringBuilder();
+
+					for (int i = 0; i < sites.length(); i++) {
+						JSONObject name = sites.getJSONObject(i);
+						sb.append(name);
+						sb.append("\n");
+					}
+
+					textView.setText(sb.toString());
+				}
+				catch (JSONException je) {
+					Log.e(_TAG, "Could not parse JSON", je);
+				}
+			}
+
+			@Override
+			public void onFailure(Exception exception) {
+				textView.setText(exception.getMessage());
+			}
+
+		};
 	}
 
 	private static final String _TAG = MainActivity.class.getSimpleName();

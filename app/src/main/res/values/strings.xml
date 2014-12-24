@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Liferay OAuth Sample</string>
+	<string name="consumer_key">abb49e76-aafb-405a-8619-76be986e6752</string>
+	<string name="consumer_secret">525041f5b3f8f248643c31dd384637ed</string>
+	<string name="server">http://192.168.56.1:8080</string>
 </resources>
