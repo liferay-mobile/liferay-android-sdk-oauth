@@ -110,8 +110,8 @@ public class MainActivity extends Activity {
 					StringBuilder sb = new StringBuilder();
 
 					for (int i = 0; i < sites.length(); i++) {
-						JSONObject name = sites.getJSONObject(i);
-						sb.append(name);
+						JSONObject site = sites.getJSONObject(i);
+						sb.append(site.getString("name"));
 						sb.append("\n");
 					}
 
