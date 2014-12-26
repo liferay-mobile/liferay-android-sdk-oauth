@@ -1,3 +1,19 @@
-<manifest package="com.liferay.mobile.android.oauth">
-	<application />
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.liferay.mobile.android.oauth">
+
+	<application>
+		<activity
+			android:name=".activity.OAuthActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:launchMode="singleTask">
+
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"></action>
+				<category android:name="android.intent.category.DEFAULT"></category>
+				<category android:name="android.intent.category.BROWSABLE"></category>
+				<data android:scheme="liferay"></data>
+			</intent-filter>
+		</activity>
+	</application>
 </manifest>
