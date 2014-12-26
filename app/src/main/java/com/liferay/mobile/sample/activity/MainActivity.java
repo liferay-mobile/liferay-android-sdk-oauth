@@ -25,8 +25,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.liferay.mobile.android.auth.oauth.OAuth;
-import com.liferay.mobile.android.auth.oauth.OAuthActivity;
-import com.liferay.mobile.android.auth.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.activity.OAuthActivity;
+import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.service.Session;
 import com.liferay.mobile.android.service.SessionImpl;
 import com.liferay.mobile.android.task.callback.AsyncTaskCallback;

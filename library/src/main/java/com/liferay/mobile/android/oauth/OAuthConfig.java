@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.mobile.android.auth.oauth;
+package com.liferay.mobile.android.oauth;
 
 import java.io.Serializable;
 

@@ -12,18 +12,19 @@
  * details.
  */
 
-package com.liferay.mobile.android.task.oauth;
+package com.liferay.mobile.android.oauth.task;
 
 import android.content.Context;
 import android.content.Intent;
 
-import android.net.Uri;
-
 import android.os.AsyncTask;
+
+import android.support.v4.content.LocalBroadcastManager;
 
 import android.util.Log;
 
-import com.liferay.mobile.android.auth.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.activity.OAuthActivity;
+import com.liferay.mobile.android.oauth.OAuthConfig;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -31,41 +32,37 @@ import oauth.signpost.OAuthProvider;
 /**
  * @author Bruno Farache
  */
-public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
+public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
-	public RequestTokenAsyncTask(Context context, OAuthConfig config) {
+	public AccessTokenAsyncTask(Context context, OAuthConfig config) {
 		_context = context.getApplicationContext();
 		_config = config;
 	}
 
 	@Override
-	protected String doInBackground(Object... params) {
-		String URL = "";
-
+	protected Void doInBackground(Object... params) {
 		try {
 			OAuthProvider provider = _config.getProvider();
 			OAuthConsumer consumer = _config.getConsumer();
+			String verifier = _config.getVerifier();
 
-			URL = provider.retrieveRequestToken(
-				consumer, _config.getCallbackURL());
+			provider.retrieveAccessToken(consumer, verifier);
 		}
 		catch (Exception e) {
-			Log.e(_TAG, "Could not retrieve request token.", e);
+			Log.e(_TAG, "Could not retrieve access token.", e);
 		}
 
-		return URL;
+		return null;
 	}
 
 	@Override
-	protected void onPostExecute(String URL) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-		_context.startActivity(intent);
+	protected void onPostExecute(Void result) {
+		Intent intent = new Intent(OAuthActivity.ACTION_SUCCESS);
+		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
 	}
 
 	private static final String _TAG =
-		RequestTokenAsyncTask.class.getSimpleName();
+		AccessTokenAsyncTask.class.getSimpleName();
 
 	private OAuthConfig _config;
 	private Context _context;

@@ -11,3 +11,9 @@ android {
 		versionName "1.0"
 	}
 }
+
+dependencies {
+	compile group: 'com.android.support', name: 'support-v4', version: '21.0.+'
+	compile group: 'com.liferay.mobile', name: 'liferay-android-sdk', version: '6.2.0.12'
+	compile group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.2.1.2'
+}

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.mobile.android.auth.oauth;
+package com.liferay.mobile.android.oauth.activity;
 
 import android.app.Activity;
 
@@ -28,8 +28,9 @@ import android.os.Bundle;
 
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.liferay.mobile.android.task.oauth.AccessTokenAsyncTask;
-import com.liferay.mobile.android.task.oauth.RequestTokenAsyncTask;
+import com.liferay.mobile.android.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
+import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
 
 /**
  * @author Bruno Farache

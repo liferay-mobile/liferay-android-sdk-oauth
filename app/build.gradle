@@ -26,8 +26,7 @@ configurations {
 }
 
 dependencies {
-	compile group: 'com.android.support', name: 'support-v4', version: '21.0.+'
-	compile group: 'com.liferay.mobile', name: 'liferay-android-sdk', version: '6.2.0.12'
+	compile project(':library')
 
 	formatter group: 'com.liferay.portal', name: 'portal-impl', version: '6.2.0-ga1'
 	formatter group: 'com.liferay.portal', name: 'portal-service', version: '6.2.0-ga1'
