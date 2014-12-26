@@ -22,6 +22,9 @@ import android.os.Bundle;
 
 import android.util.Log;
 
+import android.view.View;
+
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,14 +106,23 @@ public class MainActivity extends Activity {
 		OAuthConfig config = new OAuthConfig(
 			server, consumerKey, consumerSecret);
 
-		Intent intent = new Intent(this, OAuthActivity.class);
+		final Intent intent = new Intent(this, OAuthActivity.class);
 		intent.putExtra(OAuthActivity.EXTRA_OAUTH_CONFIG, config);
 
-		startActivityForResult(intent, AUTHENTICATE_REQUEST_CODE);
+		Button start = (Button)findViewById(R.id.login);
+
+		start.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				startActivityForResult(intent, AUTHENTICATE_REQUEST_CODE);
+			}
+
+		});
 	}
 
 	private AsyncTaskCallback _getPrintSitesCallback() {
-		final TextView textView = (TextView)findViewById(R.id.sites);
+		final TextView result = (TextView)findViewById(R.id.result);
 
 		return new JSONArrayAsyncTaskCallback() {
 
@@ -125,7 +137,7 @@ public class MainActivity extends Activity {
 						sb.append("\n");
 					}
 
-					textView.setText(sb.toString());
+					result.setText(sb.toString());
 				}
 				catch (JSONException je) {
 					Log.e(_TAG, "Could not parse JSON", je);
@@ -134,7 +146,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onFailure(Exception exception) {
-				textView.setText(exception.getMessage());
+				result.setText(exception.getMessage());
 			}
 
 		};

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Liferay OAuth Sample</string>
+	<string name="login">Login</string>
+	<string name="result">Sites list will be printed here.</string>
 </resources>
