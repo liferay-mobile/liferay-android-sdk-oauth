@@ -20,10 +20,6 @@ android {
 	}
 }
 
-configurations {
-	all*.exclude group: 'org.apache.httpcomponents', module: 'httpcore'
-}
-
 dependencies {
 	compile project(':library')
 }
