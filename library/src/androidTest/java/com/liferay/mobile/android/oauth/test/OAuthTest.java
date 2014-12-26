@@ -13,6 +13,7 @@ package com.liferay.mobile.android.oauth.test; /**
  */
 
 import android.content.Context;
+
 import android.test.AndroidTestCase;
 
 import com.liferay.mobile.android.auth.Authentication;
@@ -44,7 +45,6 @@ public class OAuthTest extends AndroidTestCase {
 		if (Validator.isNull(server) || Validator.isNull(consumerKey) ||
 			Validator.isNull(consumerSecret) || Validator.isNull(token) ||
 			Validator.isNull(tokenSecret)) {
-
 
 			fail("oauth.xml is not properly configured.");
 
