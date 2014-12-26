@@ -23,8 +23,8 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import android.util.Log;
 
-import com.liferay.mobile.android.oauth.activity.OAuthActivity;
 import com.liferay.mobile.android.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.activity.OAuthActivity;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
