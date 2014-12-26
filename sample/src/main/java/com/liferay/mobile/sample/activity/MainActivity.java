@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 			Log.d(_TAG, "Token: " + token);
 			Log.d(_TAG, "Token secret: " + tokenSecret);
 
-			String server = getString(R.string.server);
+			String server = getString(R.string.oauth_server);
 
 			OAuth auth = new OAuth(
 				consumerKey, consumerSecret, token, tokenSecret);
@@ -86,9 +86,9 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
-		String server = getString(R.string.server);
-		String consumerKey = getString(R.string.consumer_key);
-		String consumerSecret = getString(R.string.consumer_secret);
+		String server = getString(R.string.oauth_server);
+		String consumerKey = getString(R.string.oauth_consumer_key);
+		String consumerSecret = getString(R.string.oauth_consumer_secret);
 
 		OAuthConfig config = new OAuthConfig(
 			server, consumerKey, consumerSecret);

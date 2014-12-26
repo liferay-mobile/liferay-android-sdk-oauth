@@ -1,4 +1,4 @@
-/**
+package com.liferay.mobile.android.oauth.test; /**
  * Copyright (c) 2000-2014 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -12,44 +12,34 @@
  * details.
  */
 
-package com.liferay.mobile.sdk.test.portal;
+import android.content.Context;
+import android.test.AndroidTestCase;
 
 import com.liferay.mobile.android.auth.Authentication;
-import com.liferay.mobile.android.auth.oauth.OAuth;
+import com.liferay.mobile.android.oauth.OAuth;
+import com.liferay.mobile.android.oauth.R;
 import com.liferay.mobile.android.service.Session;
 import com.liferay.mobile.android.service.SessionImpl;
 import com.liferay.mobile.android.util.Validator;
 import com.liferay.mobile.android.v62.group.GroupService;
-import com.liferay.mobile.sdk.test.BaseTest;
-import com.liferay.mobile.sdk.test.util.PropertiesUtil;
-
-import java.io.IOException;
 
 import org.json.JSONArray;
-
-import org.junit.Test;
 
 /**
  * @author Bruno Farache
  */
-public class OAuthTest extends BaseTest {
+public class OAuthTest extends AndroidTestCase {
 
-	public OAuthTest() throws IOException {
-		super();
-	}
+	public void testGetUserSites() throws Exception {
+		Context context = getContext();
 
-	@Test
-	public void getUserSites() throws Exception {
-		String consumerKey = props.getProperty(
-			PropertiesUtil.OAUTH_CONSUMER_KEY);
+		String server = context.getString(R.string.oauth_server);
+		String consumerKey = context.getString(R.string.oauth_consumer_key);
+		String consumerSecret = context.getString(
+			R.string.oauth_consumer_secret);
 
-		String consumerSecret = props.getProperty(
-			PropertiesUtil.OAUTH_CONSUMER_SECRET);
-
-		String token = props.getProperty(PropertiesUtil.OAUTH_TOKEN);
-
-		String tokenSecret = props.getProperty(
-			PropertiesUtil.OAUTH_TOKEN_SECRET);
+		String token = context.getString(R.string.oauth_token);
+		String tokenSecret = context.getString(R.string.oauth_token_secret);
 
 		if (Validator.isNull(consumerKey) || Validator.isNull(consumerSecret) ||
 			Validator.isNull(token) || Validator.isNull(tokenSecret)) {
@@ -60,11 +50,13 @@ public class OAuthTest extends BaseTest {
 		Authentication auth = new OAuth(
 			consumerKey, consumerSecret, token, tokenSecret);
 
-		Session session = new SessionImpl(this.session.getServer(), auth);
+		Session session = new SessionImpl(server, auth);
 		GroupService service = new GroupService(session);
 
 		JSONArray sites = service.getUserSites();
-		GroupServiceTest.assertUserSites(sites);
+
+		assertNotNull(sites);
+		assertTrue(sites.length() > 0);
 	}
 
 }
