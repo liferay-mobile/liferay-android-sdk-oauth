@@ -26,6 +26,12 @@ import org.apache.http.HttpRequest;
  */
 public class OAuth implements Authentication {
 
+	public OAuth(OAuthConfig config) {
+		this(
+			config.getConsumerKey(), config.getConsumerSecret(),
+			config.getToken(), config.getTokenSecret());
+	}
+
 	public OAuth(
 		String consumerKey, String consumerSecret, String token,
 		String tokenSecret) {

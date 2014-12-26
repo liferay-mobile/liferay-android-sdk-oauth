@@ -64,13 +64,11 @@ public class MainActivity extends Activity {
 			Log.d(_TAG, "Token secret: " + tokenSecret);
 
 			String server = getString(R.string.oauth_server);
-
-			OAuth auth = new OAuth(
-				consumerKey, consumerSecret, token, tokenSecret);
-
+			OAuth auth = new OAuth(config);
 			AsyncTaskCallback callback = _getPrintSitesCallback();
 
 			Session session = new SessionImpl(server, auth, callback);
+
 			GroupService service = new GroupService(session);
 
 			try {
@@ -96,8 +94,8 @@ public class MainActivity extends Activity {
 			Validator.isNull(consumerSecret)) {
 
 			Toast.makeText(
-					this, "oauth.xml is not properly configured.",
-					Toast.LENGTH_LONG).show();
+				this, "oauth.xml is not properly configured.",
+				Toast.LENGTH_LONG).show();
 
 			return;
 		}
