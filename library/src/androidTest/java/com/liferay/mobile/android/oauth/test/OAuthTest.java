@@ -41,8 +41,12 @@ public class OAuthTest extends AndroidTestCase {
 		String token = context.getString(R.string.oauth_token);
 		String tokenSecret = context.getString(R.string.oauth_token_secret);
 
-		if (Validator.isNull(consumerKey) || Validator.isNull(consumerSecret) ||
-			Validator.isNull(token) || Validator.isNull(tokenSecret)) {
+		if (Validator.isNull(server) || Validator.isNull(consumerKey) ||
+			Validator.isNull(consumerSecret) || Validator.isNull(token) ||
+			Validator.isNull(tokenSecret)) {
+
+
+			fail("oauth.xml is not properly configured.");
 
 			return;
 		}

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liferay.mobile.android.oauth.OAuth;
 import com.liferay.mobile.android.oauth.OAuthConfig;
@@ -31,6 +32,7 @@ import com.liferay.mobile.android.service.Session;
 import com.liferay.mobile.android.service.SessionImpl;
 import com.liferay.mobile.android.task.callback.AsyncTaskCallback;
 import com.liferay.mobile.android.task.callback.typed.JSONArrayAsyncTaskCallback;
+import com.liferay.mobile.android.util.Validator;
 import com.liferay.mobile.android.v62.group.GroupService;
 import com.liferay.mobile.sample.R;
 
@@ -89,6 +91,16 @@ public class MainActivity extends Activity {
 		String server = getString(R.string.oauth_server);
 		String consumerKey = getString(R.string.oauth_consumer_key);
 		String consumerSecret = getString(R.string.oauth_consumer_secret);
+
+		if (Validator.isNull(server) || Validator.isNull(consumerKey) ||
+			Validator.isNull(consumerSecret)) {
+
+			Toast.makeText(
+					this, "oauth.xml is not properly configured.",
+					Toast.LENGTH_LONG).show();
+
+			return;
+		}
 
 		OAuthConfig config = new OAuthConfig(
 			server, consumerKey, consumerSecret);

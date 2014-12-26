@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="oauth_consumer_key">abb49e76-aafb-405a-8619-76be986e6752</string>
-	<string name="oauth_consumer_secret">525041f5b3f8f248643c31dd384637ed</string>
-	<string name="oauth_server">http://192.168.56.1:8080</string>
-	<string name="oauth_token">e5a86c2b0ac09a4ea4fabc164eee8233</string>
-	<string name="oauth_token_secret">114dcd0a6af5bcecea832616e56b6877</string>
+	<string name="oauth_consumer_key"></string>
+	<string name="oauth_consumer_secret"></string>
+	<string name="oauth_server"></string>
+	<string name="oauth_token"></string>
+	<string name="oauth_token_secret"></string>
 </resources>
