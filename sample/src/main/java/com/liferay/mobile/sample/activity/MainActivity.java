@@ -84,8 +84,8 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle state) {
+		super.onCreate(state);
 
 		setContentView(R.layout.main);
 
@@ -109,9 +109,9 @@ public class MainActivity extends Activity {
 		final Intent intent = new Intent(this, OAuthActivity.class);
 		intent.putExtra(OAuthActivity.EXTRA_OAUTH_CONFIG, config);
 
-		Button start = (Button)findViewById(R.id.login);
+		Button login = (Button)findViewById(R.id.login);
 
-		start.setOnClickListener(new View.OnClickListener() {
+		login.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View view) {

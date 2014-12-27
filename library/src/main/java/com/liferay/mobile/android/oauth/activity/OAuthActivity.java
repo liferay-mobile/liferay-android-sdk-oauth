@@ -62,10 +62,10 @@ public class OAuthActivity extends Activity {
 
 		_config = config;
 
+		registerReceiver();
+
 		AsyncTask task = new RequestTokenAsyncTask(this, _config);
 		task.execute();
-
-		registerReceiver();
 	}
 
 	@Override
