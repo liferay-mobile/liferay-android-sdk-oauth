@@ -17,13 +17,14 @@ package com.liferay.mobile.android.oauth.task;
 import android.content.Context;
 import android.content.Intent;
 
-import android.net.Uri;
-
 import android.os.AsyncTask;
+
+import android.support.v4.content.LocalBroadcastManager;
 
 import android.util.Log;
 
 import com.liferay.mobile.android.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.activity.OAuthActivity;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -58,10 +59,9 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
 	@Override
 	protected void onPostExecute(String URL) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-		_context.startActivity(intent);
+		Intent intent = new Intent(OAuthActivity.ACTION_OPEN_BROWSER);
+		intent.putExtra(OAuthActivity.EXTRA_URL, URL);
+		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
 	}
 
 	private static final String _TAG =
