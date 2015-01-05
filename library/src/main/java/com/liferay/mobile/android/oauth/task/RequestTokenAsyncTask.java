@@ -52,16 +52,29 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 		}
 		catch (Exception e) {
 			Log.e(_TAG, "Could not retrieve request token.", e);
+			_exception = e;
+			cancel(true);
 		}
 
 		return URL;
 	}
 
 	@Override
+	protected void onCancelled() {
+		Intent intent = new Intent(OAuthActivity.ACTION_FAILURE);
+		intent.putExtra(OAuthActivity.EXTRA_EXCEPTION, _exception);
+		_getLocalBroadcastManager().sendBroadcast(intent);
+	}
+
+	@Override
 	protected void onPostExecute(String URL) {
 		Intent intent = new Intent(OAuthActivity.ACTION_OPEN_BROWSER);
 		intent.putExtra(OAuthActivity.EXTRA_URL, URL);
-		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
+		_getLocalBroadcastManager().sendBroadcast(intent);
+	}
+
+	private LocalBroadcastManager _getLocalBroadcastManager() {
+		return LocalBroadcastManager.getInstance(_context);
 	}
 
 	private static final String _TAG =
@@ -69,5 +82,6 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
 	private OAuthConfig _config;
 	private Context _context;
+	private Exception _exception;
 
 }

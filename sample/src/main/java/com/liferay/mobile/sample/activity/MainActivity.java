@@ -52,7 +52,11 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onActivityResult(int request, int result, Intent intent) {
-		if ((request == AUTHENTICATE_REQUEST_CODE) && (result == RESULT_OK)) {
+		if (request != AUTHENTICATE_REQUEST_CODE) {
+			return;
+		}
+
+		if (result == RESULT_OK) {
 			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
 				OAuthActivity.EXTRA_OAUTH_CONFIG);
 
@@ -80,6 +84,13 @@ public class MainActivity extends Activity {
 			catch (Exception e) {
 				Log.e(_TAG, "Error during service call", e);
 			}
+		}
+		else if (result == RESULT_CANCELED) {
+			Exception exception = (Exception)intent.getSerializableExtra(
+				OAuthActivity.EXTRA_EXCEPTION);
+
+			Toast.makeText(
+				this, exception.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 

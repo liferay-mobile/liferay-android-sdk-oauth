@@ -37,9 +37,13 @@ import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
  */
 public class OAuthActivity extends Activity {
 
+	public static final String ACTION_FAILURE = "ACTION_FAILURE";
+
 	public static final String ACTION_OPEN_BROWSER = "ACTION_OPEN_BROWSER";
 
 	public static final String ACTION_SUCCESS = "ACTION_SUCCESS";
+
+	public static final String EXTRA_EXCEPTION = "EXTRA_EXCEPTION";
 
 	public static final String EXTRA_OAUTH_CONFIG = "EXTRA_OAUTH_CONFIG";
 
@@ -87,6 +91,15 @@ public class OAuthActivity extends Activity {
 		task.execute();
 	}
 
+	protected void onFailure(Exception exception) {
+		Intent intent = new Intent();
+		intent.putExtra(EXTRA_EXCEPTION, exception);
+
+		setResult(RESULT_CANCELED, intent);
+
+		finish();
+	}
+
 	protected void onSuccess() {
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_OAUTH_CONFIG, _config);
@@ -103,7 +116,13 @@ public class OAuthActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 
-				if (ACTION_OPEN_BROWSER.equals(action)) {
+				if (ACTION_FAILURE.equals(action)) {
+					Exception exception =
+						(Exception)intent.getSerializableExtra(EXTRA_EXCEPTION);
+
+					OAuthActivity.this.onFailure(exception);
+				}
+				else if (ACTION_OPEN_BROWSER.equals(action)) {
 					String URL = intent.getStringExtra(EXTRA_URL);
 
 					Intent browserIntent = new Intent(
@@ -121,6 +140,7 @@ public class OAuthActivity extends Activity {
 		};
 
 		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_FAILURE);
 		filter.addAction(ACTION_SUCCESS);
 		filter.addAction(ACTION_OPEN_BROWSER);
 

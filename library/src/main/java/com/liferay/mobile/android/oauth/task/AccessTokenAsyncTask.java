@@ -50,15 +50,28 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 		}
 		catch (Exception e) {
 			Log.e(_TAG, "Could not retrieve access token.", e);
+			_exception = e;
+			cancel(true);
 		}
 
 		return null;
 	}
 
 	@Override
+	protected void onCancelled() {
+		Intent intent = new Intent(OAuthActivity.ACTION_FAILURE);
+		intent.putExtra(OAuthActivity.EXTRA_EXCEPTION, _exception);
+		_getLocalBroadcastManager().sendBroadcast(intent);
+	}
+
+	@Override
 	protected void onPostExecute(Void result) {
 		Intent intent = new Intent(OAuthActivity.ACTION_SUCCESS);
-		LocalBroadcastManager.getInstance(_context).sendBroadcast(intent);
+		_getLocalBroadcastManager().sendBroadcast(intent);
+	}
+
+	private LocalBroadcastManager _getLocalBroadcastManager() {
+		return LocalBroadcastManager.getInstance(_context);
 	}
 
 	private static final String _TAG =
@@ -66,5 +79,6 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
 	private OAuthConfig _config;
 	private Context _context;
+	private Exception _exception;
 
 }
