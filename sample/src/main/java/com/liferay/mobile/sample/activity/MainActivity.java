@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.liferay.mobile.android.oauth.OAuth;
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.oauth.activity.OAuthActivity;
+import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
 import com.liferay.mobile.android.service.Session;
 import com.liferay.mobile.android.service.SessionImpl;
 import com.liferay.mobile.android.task.callback.AsyncTaskCallback;
@@ -87,7 +88,7 @@ public class MainActivity extends Activity {
 		}
 		else if (result == RESULT_CANCELED) {
 			Exception exception = (Exception)intent.getSerializableExtra(
-				OAuthActivity.EXTRA_EXCEPTION);
+				OAuthBroadcastReceiver.EXTRA_EXCEPTION);
 
 			Toast.makeText(
 				this, exception.getMessage(), Toast.LENGTH_LONG).show();

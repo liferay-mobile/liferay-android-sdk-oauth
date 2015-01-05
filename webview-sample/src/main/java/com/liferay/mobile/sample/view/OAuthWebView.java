@@ -14,32 +14,27 @@
 
 package com.liferay.mobile.sample.view;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 
 import android.net.Uri;
 
 import android.os.AsyncTask;
 
-import android.support.v4.content.LocalBroadcastManager;
-
 import android.util.AttributeSet;
 
 import android.webkit.WebView;
 
-import android.widget.Toast;
-
+import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
-import com.liferay.mobile.android.oauth.activity.OAuthActivity;
+import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
+import com.liferay.mobile.android.oauth.receiver.OnOpenBrowserListener;
 import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
 import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
 
 /**
  * @author Bruno Farache
  */
-public class OAuthWebView extends WebView {
+public class OAuthWebView extends WebView implements OnOpenBrowserListener {
 
 	public OAuthWebView(Context context) {
 		this(context, null);
@@ -49,13 +44,19 @@ public class OAuthWebView extends WebView {
 		super(context, attributes);
 	}
 
-	public void start(OAuthConfig config) {
+	@Override
+	public void onOpenBrowser(String URL) {
+		loadUrl(URL);
+	}
+
+	public void start(OAuthConfig config, OAuthCallback callback) {
 		_config = config;
 
 		getSettings().setJavaScriptEnabled(true);
 		setWebViewClient(new OAuthWebClient(_config.getCallbackURL()));
 
-		registerReceiver();
+		_receiver = new OAuthBroadcastReceiver(getContext(), callback, this);
+		_receiver.register();
 
 		AsyncTask task = new RequestTokenAsyncTask(getContext(), _config);
 		task.execute();
@@ -71,66 +72,7 @@ public class OAuthWebView extends WebView {
 		task.execute();
 	}
 
-	protected void onFailure(Exception exception) {
-		Toast.makeText(
-			getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-	}
-
-	protected void onOpenBrowser(String URL) {
-		loadUrl(URL);
-	}
-
-	protected void onSuccess() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Success!");
-
-		sb.append("\nToken: ");
-		sb.append(_config.getToken());
-
-		sb.append("\nToken Secret: ");
-		sb.append(_config.getTokenSecret());
-
-		Toast.makeText(getContext(), sb.toString(), Toast.LENGTH_LONG).show();
-	}
-
-	protected void registerReceiver() {
-		_receiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-
-				if (OAuthActivity.ACTION_FAILURE.equals(action)) {
-					Exception exception =
-						(Exception)intent.getSerializableExtra(
-							OAuthActivity.EXTRA_EXCEPTION);
-
-					OAuthWebView.this.onFailure(exception);
-				}
-				else if (OAuthActivity.ACTION_OPEN_BROWSER.equals(action)) {
-					String URL = intent.getStringExtra(OAuthActivity.EXTRA_URL);
-
-					OAuthWebView.this.onOpenBrowser(URL);
-				}
-				else if (OAuthActivity.ACTION_SUCCESS.equals(action)) {
-					OAuthWebView.this.onSuccess();
-				}
-			}
-
-		};
-
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(OAuthActivity.ACTION_FAILURE);
-		filter.addAction(OAuthActivity.ACTION_OPEN_BROWSER);
-		filter.addAction(OAuthActivity.ACTION_SUCCESS);
-
-		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(
-			getContext());
-
-		manager.registerReceiver(_receiver, filter);
-	}
-
 	private OAuthConfig _config;
-	private BroadcastReceiver _receiver;
+	private OAuthBroadcastReceiver _receiver;
 
 }

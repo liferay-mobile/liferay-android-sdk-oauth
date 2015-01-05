@@ -24,7 +24,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.liferay.mobile.android.oauth.OAuthConfig;
-import com.liferay.mobile.android.oauth.activity.OAuthActivity;
+import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -59,14 +59,14 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
 	@Override
 	protected void onCancelled() {
-		Intent intent = new Intent(OAuthActivity.ACTION_FAILURE);
-		intent.putExtra(OAuthActivity.EXTRA_EXCEPTION, _exception);
+		Intent intent = new Intent(OAuthBroadcastReceiver.ACTION_FAILURE);
+		intent.putExtra(OAuthBroadcastReceiver.EXTRA_EXCEPTION, _exception);
 		_getLocalBroadcastManager().sendBroadcast(intent);
 	}
 
 	@Override
 	protected void onPostExecute(Void result) {
-		Intent intent = new Intent(OAuthActivity.ACTION_SUCCESS);
+		Intent intent = new Intent(OAuthBroadcastReceiver.ACTION_SUCCESS);
 		_getLocalBroadcastManager().sendBroadcast(intent);
 	}
 

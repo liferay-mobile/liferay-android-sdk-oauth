@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.util.Validator;
 import com.liferay.mobile.sample.R;
@@ -31,7 +32,7 @@ import com.liferay.mobile.sample.view.OAuthWebView;
 /**
  * @author Bruno Farache
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OAuthCallback {
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -53,8 +54,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 
-		final OAuthConfig config = new OAuthConfig(
-			server, consumerKey, consumerSecret);
+		_config = new OAuthConfig(server, consumerKey, consumerSecret);
 
 		Button login = (Button)findViewById(R.id.login);
 
@@ -63,10 +63,31 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
-				webView.start(config);
+				webView.start(_config, MainActivity.this);
 			}
 
 		});
 	}
+
+	@Override
+	public void onFailure(Exception exception) {
+		Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onSuccess() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Success!");
+
+		sb.append("\nToken: ");
+		sb.append(_config.getToken());
+
+		sb.append("\nToken Secret: ");
+		sb.append(_config.getTokenSecret());
+
+		Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+	}
+
+	private OAuthConfig _config;
 
 }

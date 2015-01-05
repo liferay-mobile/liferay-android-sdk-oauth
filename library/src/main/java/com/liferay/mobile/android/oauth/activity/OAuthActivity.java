@@ -16,38 +16,27 @@ package com.liferay.mobile.android.oauth.activity;
 
 import android.app.Activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 
 import android.net.Uri;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.support.v4.content.LocalBroadcastManager;
-
+import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
+import com.liferay.mobile.android.oauth.receiver.OnOpenBrowserListener;
 import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
 import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
 
 /**
  * @author Bruno Farache
  */
-public class OAuthActivity extends Activity {
-
-	public static final String ACTION_FAILURE = "ACTION_FAILURE";
-
-	public static final String ACTION_OPEN_BROWSER = "ACTION_OPEN_BROWSER";
-
-	public static final String ACTION_SUCCESS = "ACTION_SUCCESS";
-
-	public static final String EXTRA_EXCEPTION = "EXTRA_EXCEPTION";
+public class OAuthActivity extends Activity
+		implements OAuthCallback, OnOpenBrowserListener {
 
 	public static final String EXTRA_OAUTH_CONFIG = "EXTRA_OAUTH_CONFIG";
-
-	public static final String EXTRA_URL = "EXTRA_URL";
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -66,7 +55,8 @@ public class OAuthActivity extends Activity {
 
 		_config = config;
 
-		registerReceiver();
+		_receiver = new OAuthBroadcastReceiver(this);
+		_receiver.register();
 
 		AsyncTask task = new RequestTokenAsyncTask(this, _config);
 		task.execute();
@@ -76,8 +66,17 @@ public class OAuthActivity extends Activity {
 	public void onDestroy() {
 		super.onDestroy();
 
-		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
-		manager.unregisterReceiver(_receiver);
+		_receiver.unregister();
+	}
+
+	@Override
+	public void onFailure(Exception exception) {
+		Intent intent = new Intent();
+		intent.putExtra(OAuthBroadcastReceiver.EXTRA_EXCEPTION, exception);
+
+		setResult(RESULT_CANCELED, intent);
+
+		finish();
 	}
 
 	@Override
@@ -91,16 +90,15 @@ public class OAuthActivity extends Activity {
 		task.execute();
 	}
 
-	protected void onFailure(Exception exception) {
-		Intent intent = new Intent();
-		intent.putExtra(EXTRA_EXCEPTION, exception);
-
-		setResult(RESULT_CANCELED, intent);
-
-		finish();
+	@Override
+	public void onOpenBrowser(String URL) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
-	protected void onSuccess() {
+	@Override
+	public void onSuccess() {
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_OAUTH_CONFIG, _config);
 
@@ -109,46 +107,7 @@ public class OAuthActivity extends Activity {
 		finish();
 	}
 
-	protected void registerReceiver() {
-		_receiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-
-				if (ACTION_FAILURE.equals(action)) {
-					Exception exception =
-						(Exception)intent.getSerializableExtra(EXTRA_EXCEPTION);
-
-					OAuthActivity.this.onFailure(exception);
-				}
-				else if (ACTION_OPEN_BROWSER.equals(action)) {
-					String URL = intent.getStringExtra(EXTRA_URL);
-
-					Intent browserIntent = new Intent(
-						Intent.ACTION_VIEW, Uri.parse(URL));
-
-					browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-					startActivity(browserIntent);
-				}
-				else if (ACTION_SUCCESS.equals(action)) {
-					OAuthActivity.this.onSuccess();
-				}
-			}
-
-		};
-
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(ACTION_FAILURE);
-		filter.addAction(ACTION_OPEN_BROWSER);
-		filter.addAction(ACTION_SUCCESS);
-
-		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
-		manager.registerReceiver(_receiver, filter);
-	}
-
 	private OAuthConfig _config;
-	private BroadcastReceiver _receiver;
+	private OAuthBroadcastReceiver _receiver;
 
 }
