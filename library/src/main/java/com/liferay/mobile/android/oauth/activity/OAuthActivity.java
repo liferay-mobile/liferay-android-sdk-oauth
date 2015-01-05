@@ -141,8 +141,8 @@ public class OAuthActivity extends Activity {
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_FAILURE);
-		filter.addAction(ACTION_SUCCESS);
 		filter.addAction(ACTION_OPEN_BROWSER);
+		filter.addAction(ACTION_SUCCESS);
 
 		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
 		manager.registerReceiver(_receiver, filter);

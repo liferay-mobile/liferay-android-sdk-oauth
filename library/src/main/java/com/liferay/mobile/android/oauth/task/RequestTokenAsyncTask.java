@@ -46,9 +46,9 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 		try {
 			OAuthProvider provider = _config.getProvider();
 			OAuthConsumer consumer = _config.getConsumer();
+			String callbackURL = _config.getCallbackURL();
 
-			URL = provider.retrieveRequestToken(
-				consumer, _config.getCallbackURL());
+			URL = provider.retrieveRequestToken(consumer, callbackURL);
 		}
 		catch (Exception e) {
 			Log.e(_TAG, "Could not retrieve request token.", e);
