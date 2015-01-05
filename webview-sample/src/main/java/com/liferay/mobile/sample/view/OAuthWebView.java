@@ -18,11 +18,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
 import android.net.Uri;
+
 import android.os.AsyncTask;
+
 import android.support.v4.content.LocalBroadcastManager;
+
 import android.util.AttributeSet;
+
 import android.webkit.WebView;
+
+import android.widget.Toast;
 
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.oauth.activity.OAuthActivity;
@@ -54,6 +61,38 @@ public class OAuthWebView extends WebView {
 		task.execute();
 	}
 
+	protected void onCallbackURL(Uri uri) {
+		String verifier = uri.getQueryParameter("oauth_verifier");
+		_config.setVerifier(verifier);
+
+		AccessTokenAsyncTask task = new AccessTokenAsyncTask(
+			getContext(), _config);
+
+		task.execute();
+	}
+
+	protected void onFailure(Exception exception) {
+		Toast.makeText(
+			getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+	}
+
+	protected void onOpenBrowser(String URL) {
+		loadUrl(URL);
+	}
+
+	protected void onSuccess() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Success!");
+
+		sb.append("\nToken: ");
+		sb.append(_config.getToken());
+
+		sb.append("\nToken Secret: ");
+		sb.append(_config.getTokenSecret());
+
+		Toast.makeText(getContext(), sb.toString(), Toast.LENGTH_LONG).show();
+	}
+
 	protected void registerReceiver() {
 		_receiver = new BroadcastReceiver() {
 
@@ -61,7 +100,14 @@ public class OAuthWebView extends WebView {
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 
-				if (OAuthActivity.ACTION_OPEN_BROWSER.equals(action)) {
+				if (OAuthActivity.ACTION_FAILURE.equals(action)) {
+					Exception exception =
+						(Exception)intent.getSerializableExtra(
+							OAuthActivity.EXTRA_EXCEPTION);
+
+					OAuthWebView.this.onFailure(exception);
+				}
+				else if (OAuthActivity.ACTION_OPEN_BROWSER.equals(action)) {
 					String URL = intent.getStringExtra(OAuthActivity.EXTRA_URL);
 
 					OAuthWebView.this.onOpenBrowser(URL);
@@ -74,6 +120,7 @@ public class OAuthWebView extends WebView {
 		};
 
 		IntentFilter filter = new IntentFilter();
+		filter.addAction(OAuthActivity.ACTION_FAILURE);
 		filter.addAction(OAuthActivity.ACTION_OPEN_BROWSER);
 		filter.addAction(OAuthActivity.ACTION_SUCCESS);
 
@@ -83,27 +130,7 @@ public class OAuthWebView extends WebView {
 		manager.registerReceiver(_receiver, filter);
 	}
 
-	protected void onSuccess() {
-		System.out.print("Token: " + _config.getToken());
-		System.out.print("Token Secret: " + _config.getTokenSecret());
-	}
-
-	protected void onOpenBrowser(String URL) {
-		loadUrl(URL);
-	}
-
-	private BroadcastReceiver _receiver;
-
-	public void onCallbackURL(Uri uri) {
-		String verifier = uri.getQueryParameter("oauth_verifier");
-		_config.setVerifier(verifier);
-
-		AccessTokenAsyncTask task = new AccessTokenAsyncTask(
-			getContext(), _config);
-
-		task.execute();
-	}
-
 	private OAuthConfig _config;
+	private BroadcastReceiver _receiver;
 
 }

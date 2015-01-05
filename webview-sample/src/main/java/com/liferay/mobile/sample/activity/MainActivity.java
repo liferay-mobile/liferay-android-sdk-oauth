@@ -16,33 +16,17 @@ package com.liferay.mobile.sample.activity;
 
 import android.app.Activity;
 
-import android.content.Intent;
-
 import android.os.Bundle;
-
-import android.util.Log;
 
 import android.view.View;
 
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.liferay.mobile.android.oauth.OAuth;
 import com.liferay.mobile.android.oauth.OAuthConfig;
-import com.liferay.mobile.android.oauth.activity.OAuthActivity;
-import com.liferay.mobile.android.service.Session;
-import com.liferay.mobile.android.service.SessionImpl;
-import com.liferay.mobile.android.task.callback.AsyncTaskCallback;
-import com.liferay.mobile.android.task.callback.typed.JSONArrayAsyncTaskCallback;
 import com.liferay.mobile.android.util.Validator;
-import com.liferay.mobile.android.v62.group.GroupService;
 import com.liferay.mobile.sample.R;
 import com.liferay.mobile.sample.view.OAuthWebView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * @author Bruno Farache

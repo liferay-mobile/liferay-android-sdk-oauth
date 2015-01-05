@@ -15,6 +15,7 @@
 package com.liferay.mobile.sample.view;
 
 import android.net.Uri;
+
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
