@@ -29,19 +29,19 @@ import com.liferay.mobile.android.oauth.activity.OAuthActivity;
  */
 public class OAuthBroadcastReceiver extends BroadcastReceiver {
 
-	public static final String ACTION_FAILURE = "ACTION_FAILURE";
+	public static final String ACTION_AUTHORIZE_URL = "ACTION_AUTHORIZE_URL";
 
-	public static final String ACTION_OPEN_BROWSER = "ACTION_OPEN_BROWSER";
+	public static final String ACTION_FAILURE = "ACTION_FAILURE";
 
 	public static final String ACTION_SUCCESS = "ACTION_SUCCESS";
 
-	public static final String EXTRA_EXCEPTION = "EXTRA_EXCEPTION";
+	public static final String EXTRA_AUTHORIZE_URL = "EXTRA_AUTHORIZE_URL";
 
-	public static final String EXTRA_URL = "EXTRA_URL";
+	public static final String EXTRA_EXCEPTION = "EXTRA_EXCEPTION";
 
 	public OAuthBroadcastReceiver(
 		Context context, OAuthCallback callback,
-		OnOpenBrowserListener listener) {
+		OnAuthorizeURLListener listener) {
 
 		_context = context.getApplicationContext();
 		_callback = callback;
@@ -56,15 +56,15 @@ public class OAuthBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 
-		if (ACTION_FAILURE.equals(action)) {
+		if (ACTION_AUTHORIZE_URL.equals(action)) {
+			String authorizeURL = intent.getStringExtra(EXTRA_AUTHORIZE_URL);
+			_listener.onAuthorizeURL(authorizeURL);
+		}
+		else if (ACTION_FAILURE.equals(action)) {
 			Exception exception = (Exception)intent.getSerializableExtra(
 				EXTRA_EXCEPTION);
 
 			_callback.onFailure(exception);
-		}
-		else if (ACTION_OPEN_BROWSER.equals(action)) {
-			String URL = intent.getStringExtra(EXTRA_URL);
-			_listener.onOpenBrowser(URL);
 		}
 		else if (ACTION_SUCCESS.equals(action)) {
 			_callback.onSuccess();
@@ -77,8 +77,8 @@ public class OAuthBroadcastReceiver extends BroadcastReceiver {
 
 	public void register() {
 		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_AUTHORIZE_URL);
 		filter.addAction(ACTION_FAILURE);
-		filter.addAction(ACTION_OPEN_BROWSER);
 		filter.addAction(ACTION_SUCCESS);
 
 		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(
@@ -96,6 +96,6 @@ public class OAuthBroadcastReceiver extends BroadcastReceiver {
 
 	private OAuthCallback _callback;
 	private Context _context;
-	private OnOpenBrowserListener _listener;
+	private OnAuthorizeURLListener _listener;
 
 }

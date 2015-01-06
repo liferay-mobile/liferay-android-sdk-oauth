@@ -26,7 +26,7 @@ import android.os.Bundle;
 import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
-import com.liferay.mobile.android.oauth.receiver.OnOpenBrowserListener;
+import com.liferay.mobile.android.oauth.receiver.OnAuthorizeURLListener;
 import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
 import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
 
@@ -34,9 +34,16 @@ import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
  * @author Bruno Farache
  */
 public class OAuthActivity extends Activity
-		implements OAuthCallback, OnOpenBrowserListener {
+		implements OAuthCallback, OnAuthorizeURLListener {
 
 	public static final String EXTRA_OAUTH_CONFIG = "EXTRA_OAUTH_CONFIG";
+
+	@Override
+	public void onAuthorizeURL(String authorizeURL) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorizeURL));
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -88,13 +95,6 @@ public class OAuthActivity extends Activity
 
 		AccessTokenAsyncTask task = new AccessTokenAsyncTask(this, _config);
 		task.execute();
-	}
-
-	@Override
-	public void onOpenBrowser(String URL) {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
 	}
 
 	@Override

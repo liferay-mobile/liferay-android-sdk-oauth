@@ -27,14 +27,14 @@ import android.webkit.WebView;
 import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
-import com.liferay.mobile.android.oauth.receiver.OnOpenBrowserListener;
+import com.liferay.mobile.android.oauth.receiver.OnAuthorizeURLListener;
 import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
 import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
 
 /**
  * @author Bruno Farache
  */
-public class OAuthWebView extends WebView implements OnOpenBrowserListener {
+public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 
 	public OAuthWebView(Context context) {
 		this(context, null);
@@ -49,8 +49,8 @@ public class OAuthWebView extends WebView implements OnOpenBrowserListener {
 	}
 
 	@Override
-	public void onOpenBrowser(String URL) {
-		loadUrl(URL);
+	public void onAuthorizeURL(String authorizeURL) {
+		loadUrl(authorizeURL);
 	}
 
 	public void start(OAuthConfig config, OAuthCallback callback) {

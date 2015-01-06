@@ -41,14 +41,14 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
 	@Override
 	protected String doInBackground(Object... params) {
-		String URL = "";
+		String authorizeURL = "";
 
 		try {
 			OAuthProvider provider = _config.getProvider();
 			OAuthConsumer consumer = _config.getConsumer();
 			String callbackURL = _config.getCallbackURL();
 
-			URL = provider.retrieveRequestToken(consumer, callbackURL);
+			authorizeURL = provider.retrieveRequestToken(consumer, callbackURL);
 		}
 		catch (Exception e) {
 			Log.e(_TAG, "Could not retrieve request token.", e);
@@ -56,7 +56,7 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 			cancel(true);
 		}
 
-		return URL;
+		return authorizeURL;
 	}
 
 	@Override
@@ -67,9 +67,11 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 	}
 
 	@Override
-	protected void onPostExecute(String URL) {
-		Intent intent = new Intent(OAuthBroadcastReceiver.ACTION_OPEN_BROWSER);
-		intent.putExtra(OAuthBroadcastReceiver.EXTRA_URL, URL);
+	protected void onPostExecute(String authorizeURL) {
+		Intent intent = new Intent(OAuthBroadcastReceiver.ACTION_AUTHORIZE_URL);
+		intent.putExtra(
+			OAuthBroadcastReceiver.EXTRA_AUTHORIZE_URL, authorizeURL);
+
 		_getLocalBroadcastManager().sendBroadcast(intent);
 	}
 

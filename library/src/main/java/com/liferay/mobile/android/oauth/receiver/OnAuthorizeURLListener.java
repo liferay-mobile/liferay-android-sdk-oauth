@@ -17,8 +17,8 @@ package com.liferay.mobile.android.oauth.receiver;
 /**
  * @author Bruno Farache
  */
-public interface OnOpenBrowserListener {
+public interface OnAuthorizeURLListener {
 
-	public void onOpenBrowser(String URL);
+	public void onAuthorizeURL(String authorizeURL);
 
 }
