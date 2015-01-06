@@ -44,6 +44,10 @@ public class OAuthWebView extends WebView implements OnOpenBrowserListener {
 		super(context, attributes);
 	}
 
+	public void finish() {
+		_receiver.unregister();
+	}
+
 	@Override
 	public void onOpenBrowser(String URL) {
 		loadUrl(URL);

@@ -69,6 +69,10 @@ public class OAuthBroadcastReceiver extends BroadcastReceiver {
 		else if (ACTION_SUCCESS.equals(action)) {
 			_callback.onSuccess();
 		}
+
+		if (ACTION_FAILURE.equals(action) || ACTION_SUCCESS.equals(action)) {
+			unregister();
+		}
 	}
 
 	public void register() {

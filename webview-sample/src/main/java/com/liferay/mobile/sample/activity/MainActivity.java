@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import android.widget.Button;
 import android.widget.Toast;
@@ -57,13 +58,13 @@ public class MainActivity extends Activity implements OAuthCallback {
 		_config = new OAuthConfig(server, consumerKey, consumerSecret);
 
 		Button login = (Button)findViewById(R.id.login);
+		_webView = (OAuthWebView)findViewById(R.id.webView);
 
-		login.setOnClickListener(new View.OnClickListener() {
+		login.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
-				OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
-				webView.start(_config, MainActivity.this);
+				_webView.start(_config, MainActivity.this);
 			}
 
 		});
@@ -88,6 +89,14 @@ public class MainActivity extends Activity implements OAuthCallback {
 		Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		_webView.finish();
+	}
+
 	private OAuthConfig _config;
+	private OAuthWebView _webView;
 
 }
