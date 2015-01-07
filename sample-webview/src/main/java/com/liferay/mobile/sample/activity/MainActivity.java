@@ -75,7 +75,8 @@ public class MainActivity extends Activity implements OAuthCallback {
 			return;
 		}
 
-		_config = new OAuthConfig(server, consumerKey, consumerSecret);
+		final OAuthConfig config = new OAuthConfig(
+			server, consumerKey, consumerSecret);
 
 		Button login = (Button)findViewById(R.id.login);
 		_webView = (OAuthWebView)findViewById(R.id.webView);
@@ -85,17 +86,10 @@ public class MainActivity extends Activity implements OAuthCallback {
 			@Override
 			public void onClick(View view) {
 				_webView.setVisibility(View.VISIBLE);
-				_webView.start(_config, MainActivity.this);
+				_webView.start(config, MainActivity.this);
 			}
 
 		});
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		_webView.finish();
 	}
 
 	@Override
@@ -104,11 +98,11 @@ public class MainActivity extends Activity implements OAuthCallback {
 	}
 
 	@Override
-	public void onSuccess() {
-		String consumerKey = _config.getConsumerKey();
-		String consumerSecret = _config.getConsumerSecret();
-		String token = _config.getToken();
-		String tokenSecret = _config.getTokenSecret();
+	public void onSuccess(OAuthConfig config) {
+		String consumerKey = config.getConsumerKey();
+		String consumerSecret = config.getConsumerSecret();
+		String token = config.getToken();
+		String tokenSecret = config.getTokenSecret();
 
 		Log.d(_TAG, "Consumer key: " + consumerKey);
 		Log.d(_TAG, "Consumer secret: " + consumerSecret);
@@ -116,7 +110,7 @@ public class MainActivity extends Activity implements OAuthCallback {
 		Log.d(_TAG, "Token secret: " + tokenSecret);
 
 		String server = getString(R.string.oauth_server);
-		OAuth auth = new OAuth(_config);
+		OAuth auth = new OAuth(config);
 		AsyncTaskCallback callback = _getPrintSitesCallback();
 
 		Session session = new SessionImpl(server, auth, callback);
@@ -164,7 +158,6 @@ public class MainActivity extends Activity implements OAuthCallback {
 
 	private static final String _TAG = MainActivity.class.getSimpleName();
 
-	private OAuthConfig _config;
 	private OAuthWebView _webView;
 
 }

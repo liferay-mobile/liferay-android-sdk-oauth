@@ -26,15 +26,16 @@ import android.webkit.WebView;
 
 import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
-import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
-import com.liferay.mobile.android.oauth.receiver.OnAuthorizeURLListener;
+import com.liferay.mobile.android.oauth.bus.BusUtil;
 import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
 import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
+
+import com.squareup.otto.Subscribe;
 
 /**
  * @author Bruno Farache
  */
-public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
+public class OAuthWebView extends WebView {
 
 	public OAuthWebView(Context context) {
 		this(context, null);
@@ -44,13 +45,33 @@ public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 		super(context, attributes);
 	}
 
-	public void finish() {
-		_receiver.unregister();
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+
+		BusUtil.register(this);
+	}
+
+	@Subscribe
+	public void onAuthorizeURL(String authorizeURL) {
+		loadUrl(authorizeURL);
 	}
 
 	@Override
-	public void onAuthorizeURL(String authorizeURL) {
-		loadUrl(authorizeURL);
+	public void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+
+		BusUtil.unregister(this);
+	}
+
+	@Subscribe
+	public void onFailure(Exception exception) {
+		_callback.onFailure(exception);
+	}
+
+	@Subscribe
+	public void onSuccess(OAuthConfig config) {
+		_callback.onSuccess(config);
 	}
 
 	public void start(OAuthConfig config, OAuthCallback callback) {
@@ -60,10 +81,7 @@ public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 		getSettings().setJavaScriptEnabled(true);
 		setWebViewClient(new OAuthWebClient(_config.getCallbackURL()));
 
-		_receiver = new OAuthBroadcastReceiver(getContext(), callback, this);
-		_receiver.register();
-
-		AsyncTask task = new RequestTokenAsyncTask(getContext(), _config);
+		AsyncTask task = new RequestTokenAsyncTask(_config);
 		task.execute();
 	}
 
@@ -71,14 +89,11 @@ public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 		_config.setVerifier(callbackURL);
 		_callback.onCallbackURL(callbackURL);
 
-		AccessTokenAsyncTask task = new AccessTokenAsyncTask(
-			getContext(), _config);
-
+		AccessTokenAsyncTask task = new AccessTokenAsyncTask(_config);
 		task.execute();
 	}
 
 	private OAuthCallback _callback;
 	private OAuthConfig _config;
-	private OAuthBroadcastReceiver _receiver;
 
 }

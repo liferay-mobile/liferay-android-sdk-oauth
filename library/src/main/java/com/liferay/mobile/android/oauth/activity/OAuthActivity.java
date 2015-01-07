@@ -23,34 +23,27 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
-import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
-import com.liferay.mobile.android.oauth.receiver.OnAuthorizeURLListener;
+import com.liferay.mobile.android.oauth.bus.BusUtil;
 import com.liferay.mobile.android.oauth.task.AccessTokenAsyncTask;
 import com.liferay.mobile.android.oauth.task.RequestTokenAsyncTask;
+
+import com.squareup.otto.Subscribe;
 
 /**
  * @author Bruno Farache
  */
-public class OAuthActivity extends Activity
-		implements OAuthCallback, OnAuthorizeURLListener {
+public class OAuthActivity extends Activity {
+
+	public static final String EXTRA_EXCEPTION = "EXTRA_EXCEPTION";
 
 	public static final String EXTRA_OAUTH_CONFIG = "EXTRA_OAUTH_CONFIG";
 
-	@Override
+	@Subscribe
 	public void onAuthorizeURL(String authorizeURL) {
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorizeURL));
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
-	}
-
-	@Override
-	public void onCallbackURL(Uri callbackURL) {
-		_config.setVerifier(callbackURL);
-
-		AccessTokenAsyncTask task = new AccessTokenAsyncTask(this, _config);
-		task.execute();
 	}
 
 	@Override
@@ -70,10 +63,9 @@ public class OAuthActivity extends Activity
 
 		_config = config;
 
-		_receiver = new OAuthBroadcastReceiver(this);
-		_receiver.register();
+		BusUtil.register(this);
 
-		AsyncTask task = new RequestTokenAsyncTask(this, _config);
+		AsyncTask task = new RequestTokenAsyncTask(_config);
 		task.execute();
 	}
 
@@ -81,13 +73,13 @@ public class OAuthActivity extends Activity
 	public void onDestroy() {
 		super.onDestroy();
 
-		_receiver.unregister();
+		BusUtil.unregister(this);
 	}
 
-	@Override
+	@Subscribe
 	public void onFailure(Exception exception) {
 		Intent intent = new Intent();
-		intent.putExtra(OAuthBroadcastReceiver.EXTRA_EXCEPTION, exception);
+		intent.putExtra(EXTRA_EXCEPTION, exception);
 
 		setResult(RESULT_CANCELED, intent);
 
@@ -96,13 +88,17 @@ public class OAuthActivity extends Activity
 
 	@Override
 	public void onNewIntent(Intent intent) {
-		onCallbackURL(intent.getData());
+		Uri callbackURL = intent.getData();
+		_config.setVerifier(callbackURL);
+
+		AccessTokenAsyncTask task = new AccessTokenAsyncTask(_config);
+		task.execute();
 	}
 
-	@Override
-	public void onSuccess() {
+	@Subscribe
+	public void onSuccess(OAuthConfig config) {
 		Intent intent = new Intent();
-		intent.putExtra(EXTRA_OAUTH_CONFIG, _config);
+		intent.putExtra(EXTRA_OAUTH_CONFIG, config);
 
 		setResult(RESULT_OK, intent);
 
@@ -110,6 +106,5 @@ public class OAuthActivity extends Activity
 	}
 
 	private OAuthConfig _config;
-	private OAuthBroadcastReceiver _receiver;
 
 }

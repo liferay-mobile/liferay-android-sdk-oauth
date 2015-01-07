@@ -25,6 +25,6 @@ public interface OAuthCallback {
 
 	public void onFailure(Exception exception);
 
-	public void onSuccess();
+	public void onSuccess(OAuthConfig config);
 
 }

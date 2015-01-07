@@ -14,17 +14,12 @@
 
 package com.liferay.mobile.android.oauth.task;
 
-import android.content.Context;
-import android.content.Intent;
-
 import android.os.AsyncTask;
-
-import android.support.v4.content.LocalBroadcastManager;
 
 import android.util.Log;
 
 import com.liferay.mobile.android.oauth.OAuthConfig;
-import com.liferay.mobile.android.oauth.receiver.OAuthBroadcastReceiver;
+import com.liferay.mobile.android.oauth.bus.BusUtil;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -34,8 +29,7 @@ import oauth.signpost.OAuthProvider;
  */
 public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
-	public RequestTokenAsyncTask(Context context, OAuthConfig config) {
-		_context = context.getApplicationContext();
+	public RequestTokenAsyncTask(OAuthConfig config) {
 		_config = config;
 	}
 
@@ -61,29 +55,18 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
 	@Override
 	protected void onCancelled() {
-		Intent intent = new Intent(OAuthBroadcastReceiver.ACTION_FAILURE);
-		intent.putExtra(OAuthBroadcastReceiver.EXTRA_EXCEPTION, _exception);
-		_getLocalBroadcastManager().sendBroadcast(intent);
+		BusUtil.post(_exception);
 	}
 
 	@Override
 	protected void onPostExecute(String authorizeURL) {
-		Intent intent = new Intent(OAuthBroadcastReceiver.ACTION_AUTHORIZE_URL);
-		intent.putExtra(
-			OAuthBroadcastReceiver.EXTRA_AUTHORIZE_URL, authorizeURL);
-
-		_getLocalBroadcastManager().sendBroadcast(intent);
-	}
-
-	private LocalBroadcastManager _getLocalBroadcastManager() {
-		return LocalBroadcastManager.getInstance(_context);
+		BusUtil.post(authorizeURL);
 	}
 
 	private static final String _TAG =
 		RequestTokenAsyncTask.class.getSimpleName();
 
 	private OAuthConfig _config;
-	private Context _context;
 	private Exception _exception;
 
 }

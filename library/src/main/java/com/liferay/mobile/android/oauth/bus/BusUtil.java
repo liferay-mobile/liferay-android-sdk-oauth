@@ -12,13 +12,35 @@
  * details.
  */
 
-package com.liferay.mobile.android.oauth.receiver;
+package com.liferay.mobile.android.oauth.bus;
+
+import com.squareup.otto.Bus;
 
 /**
  * @author Bruno Farache
  */
-public interface OnAuthorizeURLListener {
+public class BusUtil {
 
-	public void onAuthorizeURL(String authorizeURL);
+	public static void post(Object event) {
+		getInstance().post(event);
+	}
+
+	public static void register(Object object) {
+		getInstance().register(object);
+	}
+
+	public static void unregister(Object object) {
+		getInstance().unregister(object);
+	}
+
+	protected static Bus getInstance() {
+		if (_bus == null) {
+			_bus = new Bus();
+		}
+
+		return _bus;
+	}
+
+	private static Bus _bus;
 
 }
