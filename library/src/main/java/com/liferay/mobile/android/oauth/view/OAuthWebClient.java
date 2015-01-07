@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.mobile.sample.view;
+package com.liferay.mobile.android.oauth.view;
 
 import android.net.Uri;
 

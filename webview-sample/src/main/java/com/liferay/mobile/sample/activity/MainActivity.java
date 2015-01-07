@@ -17,6 +17,7 @@ package com.liferay.mobile.sample.activity;
 import android.app.Activity;
 
 import android.net.Uri;
+
 import android.os.Bundle;
 
 import android.view.View;
@@ -27,14 +28,19 @@ import android.widget.Toast;
 
 import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
+import com.liferay.mobile.android.oauth.view.OAuthWebView;
 import com.liferay.mobile.android.util.Validator;
 import com.liferay.mobile.sample.R;
-import com.liferay.mobile.sample.view.OAuthWebView;
 
 /**
  * @author Bruno Farache
  */
 public class MainActivity extends Activity implements OAuthCallback {
+
+	@Override
+	public void onCallbackURL(Uri callbackURL) {
+		_webView.setVisibility(View.INVISIBLE);
+	}
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -69,11 +75,6 @@ public class MainActivity extends Activity implements OAuthCallback {
 			}
 
 		});
-	}
-
-	@Override
-	public void onCallbackURL(Uri callbackURL) {
-		_webView.setVisibility(View.INVISIBLE);
 	}
 
 	@Override

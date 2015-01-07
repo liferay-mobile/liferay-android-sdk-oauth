@@ -12,7 +12,7 @@
 		android:layout_centerHorizontal="true"
 		android:text="@string/login" />
 
-	<com.liferay.mobile.sample.view.OAuthWebView
+	<com.liferay.mobile.android.oauth.view.OAuthWebView
 		android:id="@+id/webView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
