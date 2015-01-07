@@ -2,4 +2,5 @@
 <resources>
 	<string name="app_name">WebView OAuth Sample</string>
 	<string name="login">Login</string>
+	<string name="result">Sites list will be printed here.</string>
 </resources>

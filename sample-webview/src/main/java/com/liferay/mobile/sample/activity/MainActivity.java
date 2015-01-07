@@ -20,17 +20,30 @@ import android.net.Uri;
 
 import android.os.Bundle;
 
+import android.util.Log;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liferay.mobile.android.oauth.OAuth;
 import com.liferay.mobile.android.oauth.OAuthCallback;
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.oauth.view.OAuthWebView;
+import com.liferay.mobile.android.service.Session;
+import com.liferay.mobile.android.service.SessionImpl;
+import com.liferay.mobile.android.task.callback.AsyncTaskCallback;
+import com.liferay.mobile.android.task.callback.typed.JSONArrayAsyncTaskCallback;
 import com.liferay.mobile.android.util.Validator;
+import com.liferay.mobile.android.v62.group.GroupService;
 import com.liferay.mobile.sample.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author Bruno Farache
@@ -71,10 +84,18 @@ public class MainActivity extends Activity implements OAuthCallback {
 
 			@Override
 			public void onClick(View view) {
+				_webView.setVisibility(View.VISIBLE);
 				_webView.start(_config, MainActivity.this);
 			}
 
 		});
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		_webView.finish();
 	}
 
 	@Override
@@ -84,24 +105,64 @@ public class MainActivity extends Activity implements OAuthCallback {
 
 	@Override
 	public void onSuccess() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Success!");
+		String consumerKey = _config.getConsumerKey();
+		String consumerSecret = _config.getConsumerSecret();
+		String token = _config.getToken();
+		String tokenSecret = _config.getTokenSecret();
 
-		sb.append("\nToken: ");
-		sb.append(_config.getToken());
+		Log.d(_TAG, "Consumer key: " + consumerKey);
+		Log.d(_TAG, "Consumer secret: " + consumerSecret);
+		Log.d(_TAG, "Token: " + token);
+		Log.d(_TAG, "Token secret: " + tokenSecret);
 
-		sb.append("\nToken Secret: ");
-		sb.append(_config.getTokenSecret());
+		String server = getString(R.string.oauth_server);
+		OAuth auth = new OAuth(_config);
+		AsyncTaskCallback callback = _getPrintSitesCallback();
 
-		Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+		Session session = new SessionImpl(server, auth, callback);
+
+		GroupService service = new GroupService(session);
+
+		try {
+			service.getUserSites();
+		}
+		catch (Exception e) {
+			Log.e(_TAG, "Error during service call", e);
+		}
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	private AsyncTaskCallback _getPrintSitesCallback() {
+		final TextView result = (TextView)findViewById(R.id.result);
 
-		_webView.finish();
+		return new JSONArrayAsyncTaskCallback() {
+
+			@Override
+			public void onSuccess(JSONArray sites) {
+				try {
+					StringBuilder sb = new StringBuilder();
+
+					for (int i = 0; i < sites.length(); i++) {
+						JSONObject site = sites.getJSONObject(i);
+						sb.append(site.getString("name"));
+						sb.append("\n");
+					}
+
+					result.setText(sb.toString());
+				}
+				catch (JSONException je) {
+					Log.e(_TAG, "Could not parse JSON", je);
+				}
+			}
+
+			@Override
+			public void onFailure(Exception exception) {
+				result.setText(exception.getMessage());
+			}
+
+		};
 	}
+
+	private static final String _TAG = MainActivity.class.getSimpleName();
 
 	private OAuthConfig _config;
 	private OAuthWebView _webView;

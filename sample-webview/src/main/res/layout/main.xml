@@ -12,10 +12,18 @@
 		android:layout_centerHorizontal="true"
 		android:text="@string/login" />
 
+	<TextView
+		android:id="@+id/result"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/login"
+		android:layout_marginTop="@dimen/padding"
+		android:text="@string/result" />
+
 	<com.liferay.mobile.android.oauth.view.OAuthWebView
 		android:id="@+id/webView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/login"
+		android:layout_below="@id/result"
 		android:layout_marginTop="@dimen/padding" />
 </RelativeLayout>
