@@ -1,25 +1,5 @@
-apply plugin: 'com.android.application'
-apply plugin: 'idea'
-
 android {
-	compileSdkVersion 21
-	buildToolsVersion '21.1.1'
-
-	packagingOptions {
-		exclude 'META-INF/DEPENDENCIES'
-		exclude 'META-INF/LICENSE'
-		exclude 'META-INF/NOTICE'
-	}
-
 	defaultConfig {
 		applicationId "com.liferay.mobile.sample.webview"
-		minSdkVersion 21
-		targetSdkVersion 21
-		versionCode 1
-		versionName "1.0"
 	}
-}
-
-dependencies {
-	compile project(':library')
 }
