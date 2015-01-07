@@ -1,4 +1,4 @@
-package com.liferay.mobile.android.oauth.test; /**
+/**
  * Copyright (c) 2000-2014 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -11,6 +11,8 @@ package com.liferay.mobile.android.oauth.test; /**
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
+package com.liferay.mobile.android.oauth.test;
 
 import android.content.Context;
 
