@@ -55,6 +55,7 @@ public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 
 	public void start(OAuthConfig config, OAuthCallback callback) {
 		_config = config;
+		_callback = callback;
 
 		getSettings().setJavaScriptEnabled(true);
 		setWebViewClient(new OAuthWebClient(_config.getCallbackURL()));
@@ -66,9 +67,9 @@ public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 		task.execute();
 	}
 
-	protected void onCallbackURL(Uri uri) {
-		String verifier = uri.getQueryParameter("oauth_verifier");
-		_config.setVerifier(verifier);
+	protected void onCallbackURL(Uri callbackURL) {
+		_config.setVerifier(callbackURL);
+		_callback.onCallbackURL(callbackURL);
 
 		AccessTokenAsyncTask task = new AccessTokenAsyncTask(
 			getContext(), _config);
@@ -76,6 +77,7 @@ public class OAuthWebView extends WebView implements OnAuthorizeURLListener {
 		task.execute();
 	}
 
+	private OAuthCallback _callback;
 	private OAuthConfig _config;
 	private OAuthBroadcastReceiver _receiver;
 

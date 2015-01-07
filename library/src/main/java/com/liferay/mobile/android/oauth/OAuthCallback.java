@@ -14,10 +14,14 @@
 
 package com.liferay.mobile.android.oauth;
 
+import android.net.Uri;
+
 /**
  * @author Bruno Farache
  */
 public interface OAuthCallback {
+
+	public void onCallbackURL(Uri callbackURL);
 
 	public void onFailure(Exception exception);
 

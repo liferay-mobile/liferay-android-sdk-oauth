@@ -46,6 +46,14 @@ public class OAuthActivity extends Activity
 	}
 
 	@Override
+	public void onCallbackURL(Uri callbackURL) {
+		_config.setVerifier(callbackURL);
+
+		AccessTokenAsyncTask task = new AccessTokenAsyncTask(this, _config);
+		task.execute();
+	}
+
+	@Override
 	public void onCreate(Bundle state) {
 		super.onCreate(state);
 
@@ -88,13 +96,7 @@ public class OAuthActivity extends Activity
 
 	@Override
 	public void onNewIntent(Intent intent) {
-		Uri uri = intent.getData();
-
-		String verifier = uri.getQueryParameter("oauth_verifier");
-		_config.setVerifier(verifier);
-
-		AccessTokenAsyncTask task = new AccessTokenAsyncTask(this, _config);
-		task.execute();
+		onCallbackURL(intent.getData());
 	}
 
 	@Override

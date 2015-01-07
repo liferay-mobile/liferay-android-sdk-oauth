@@ -14,6 +14,8 @@
 
 package com.liferay.mobile.android.oauth;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 
 import oauth.signpost.OAuthConsumer;
@@ -104,8 +106,8 @@ public class OAuthConfig implements Serializable {
 		return _verifier;
 	}
 
-	public void setVerifier(String verifier) {
-		_verifier = verifier;
+	public void setVerifier(Uri callbackURL) {
+		_verifier = callbackURL.getQueryParameter("oauth_verifier");
 	}
 
 	protected String getAccessURL() {

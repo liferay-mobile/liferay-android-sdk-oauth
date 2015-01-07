@@ -16,6 +16,7 @@ package com.liferay.mobile.sample.activity;
 
 import android.app.Activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.View;
@@ -68,6 +69,11 @@ public class MainActivity extends Activity implements OAuthCallback {
 			}
 
 		});
+	}
+
+	@Override
+	public void onCallbackURL(Uri callbackURL) {
+		_webView.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
