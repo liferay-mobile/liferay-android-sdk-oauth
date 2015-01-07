@@ -85,6 +85,7 @@ public class MainActivity extends Activity implements OAuthCallback {
 
 			@Override
 			public void onClick(View view) {
+				_webView.loadUrl("about:blank");
 				_webView.setVisibility(View.VISIBLE);
 				_webView.start(config, MainActivity.this);
 			}
