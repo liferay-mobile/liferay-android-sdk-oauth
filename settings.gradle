@@ -1,1 +1,1 @@
-include ':library', ':sample', ':webview-sample'
+include ':library', ':sample-browser', ':sample-webview'
