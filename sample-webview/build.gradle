@@ -2,4 +2,11 @@ android {
 	defaultConfig {
 		applicationId "com.liferay.mobile.sample.webview"
 	}
+
+	buildTypes {
+		release {
+			minifyEnabled true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+		}
+	}
 }

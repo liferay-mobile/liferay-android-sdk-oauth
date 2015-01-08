@@ -1,0 +1,4 @@
+-keepclassmembers class ** {
+	@com.squareup.otto.Produce public *;
+	@com.squareup.otto.Subscribe public *;
+}
