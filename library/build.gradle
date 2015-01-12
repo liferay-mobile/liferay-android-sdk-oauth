@@ -5,6 +5,7 @@ apply plugin: 'signing'
 archivesBaseName = 'liferay-android-oauth'
 group = 'com.liferay.mobile'
 version = '1.0.0'
+description = 'Liferay Android OAuth'
 
 android {
 	compileSdkVersion 21
@@ -28,4 +29,32 @@ dependencies {
 
 signing {
     sign configurations.archives
+}
+
+install {
+	repositories.mavenInstaller {
+		pom.project {
+			name project.description
+			description project.description
+			url 'https://www.liferay.com/community/liferay-projects/liferay-mobile-sdk/overview'
+			licenses {
+				license {
+					name 'LGPL 2.1'
+					url 'http://opensource.org/licenses/lgpl-2.1.php'
+					distribution 'repo'
+				}
+			}
+			scm {
+				url 'https://github.com/brunofarache/liferay-android-sdk-oauth'
+				connection 'scm:git:git://github.com/brunofarache/liferay-android-sdk-oauth.git'
+			}
+			developers {
+				developer {
+					id 'brunofarache'
+					name 'Bruno Farache'
+					email 'bruno.farache@liferay.com'
+				}
+			}
+		}
+	}
 }
