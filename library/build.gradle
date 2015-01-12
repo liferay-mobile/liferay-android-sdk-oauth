@@ -77,3 +77,23 @@ install {
 		}
 	}
 }
+
+task release(type: Copy, dependsOn: install) {
+	from "$buildDir/outputs/aar"
+	from "$buildDir/libs"
+	from "$buildDir/poms"
+	into "$buildDir/release"
+	exclude 'library-debug.aar'
+
+	rename { String name ->
+		name.replace('library-release', "${archivesBaseName}-${version}")
+	}
+
+	rename { String name ->
+		name.replace('pom-default.xml', "${archivesBaseName}-${version}.pom")
+	}
+
+	doLast {
+		signing.sign file("build/release/${archivesBaseName}-${version}.pom")
+	}
+}
