@@ -15,6 +15,11 @@ android {
 		minSdkVersion 10
 		targetSdkVersion 21
 	}
+
+	packagingOptions {
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/NOTICE'
+	}
 }
 
 configurations {
