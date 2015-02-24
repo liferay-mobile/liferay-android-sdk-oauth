@@ -49,7 +49,7 @@ You can implement that part yourself, using any available Android OAuth 1.0a lib
 
 #### Internal WebView
 
-The instructions bellow give you an idea of the required steps to authenticate using an internal WebView in your app. It's very important that you read and run the [sample app](sample-webview/), [MainActivity.java](sample-webview/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java) contains most of the interesting code.
+The instructions bellow give you an idea of the required steps to authenticate using an internal WebView in your app. It's very important that you read and run the [sample app](sample-webview/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
 
 Create a `OAuthWebView` instance within your app layout XML file:
 
@@ -70,7 +70,7 @@ webView.start(config, this);
 
 If everything goes fine, the webiew will open Liferay's login page and will ask the credentials to the user.
 
-As you may have notificed, the start method also requires a `OAuthCallback` parameter, this callback will be called once user has sucessfully authenticated and granted permission to your app or if an error has occurred:
+As you may have notificed, the start method also requires a `OAuthCallback` parameter, the callback's `onSuccess` method will be called once user has sucessfully authenticated and granted permission to your app, if he hasn't granted or something went wrong, `onFailures` will be called instead:
 
 ```java
 @Override
@@ -94,7 +94,7 @@ The `onSuccess` config parameter provides all 4 values required by `SessionImpl`
 
 #### External Browser
 
-The instructions bellow give you an idea of the required steps to authenticate using an external browser. It's very important that you read and run the [sample app](sample-browser/), [MainActivity.java](sample-browser/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java) contains most of the interesting code.
+The instructions bellow give you an idea of the required steps to authenticate using an external browser. It's very important that you read and run the [sample app](sample-browser/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
 
 This will open the user's favorite mobile browser and the authentication flow will happen there as opposed to inside the app.
 
@@ -109,7 +109,7 @@ startActivityForResult(intent, 1);
 
 If everything goes fine, an external web browser will open Liferay's login page and will ask the credentials to the user.
 
-Once user has sucessfully authenticated and granted permission to your app or if an error has occurred, the `onActivityResult` method in your `Activity` will be called:
+Once user has sucessfully authenticated and granted permission to your app, the `onActivityResult` method in your `Activity` will be called. Likewise, if the user hasn't granted permission or something went wrong, `onActivityResult` will be also called:
 
 ```java
 @Override
