@@ -47,9 +47,9 @@ As you can see, you need to pass `consumerKey` and `consumerSecret` to the `OAut
 
 You can implement that part yourself, using any available Android OAuth 1.0a library. Alternatively, we provide helper classes to obtain `token` and `tokenSecret`. See the sections bellow.
 
-### Internal WebView
+#### Internal WebView
 
-The instructions bellow give you an idea of what's needed in order to authenticate using an internal WebView in your app. It's very important that you read and run the [sample app](sample-webview/), [MainActivity.java](sample-webview/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java) contains most of the interesting code.
+The instructions bellow give you an idea of the required steps to authenticate using an internal WebView in your app. It's very important that you read and run the [sample app](sample-webview/), [MainActivity.java](sample-webview/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java) contains most of the interesting code.
 
 Create a `OAuthWebView` instance within your app layout XML file:
 
@@ -57,18 +57,18 @@ Create a `OAuthWebView` instance within your app layout XML file:
 <com.liferay.mobile.android.oauth.view.OAuthWebView
 	android:id="@+id/webView"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content" />
+	android:layout_height="match_parent" />
 ```
 
 Then, start the OAuth flow by setting up your `OAuthWebView` instance with an `OAuthConfig` instance that contains the server URL, consumer key and secret, like the following:
 
 ```java
-OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
 OAuthConfig config = new OAuthConfig(server, consumerKey, consumerSecret);
+OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
 webView.start(config, this);
 ```
 
-If everything goes fine, the webiew will open your Liferay login page and will ask the credentials to the user.
+If everything goes fine, the webiew will open Liferay's login page and will ask the credentials to the user.
 
 As you may have notificed, the start method also requires a `OAuthCallback` parameter, this callback will be called once user has sucessfully authenticated and granted permission to your app or if an error has occurred:
 
@@ -90,7 +90,51 @@ public void onFailure(Exception exception) {
 }	
 ```
 
-The `onSuccess` config parameter provides all 4 values required by `SessionImpl` to authenticate with Liferay's services. Read the [use](#use) section above to learn how use the Mobile SDK's  services with these values.
+The `onSuccess` config parameter provides all 4 values required by `SessionImpl` to authenticate against Liferay's remote services. Read the [use](#use) section above to learn how use the Mobile SDK's  services with these values.
 
-### External Browser
+#### External Browser
 
+The instructions bellow give you an idea of the required steps to authenticate using an external browser. It's very important that you read and run the [sample app](sample-browser/), [MainActivity.java](sample-browser/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java) contains most of the interesting code.
+
+This will open the user's favorite mobile browser and the authentication flow will happen there as opposed to inside the app.
+
+From your `Activity` you must start the `OAuthActivity`, passing a `OAuthConfig` instance as an intent extra:
+
+```java
+OAuthConfig config = new OAuthConfig(server, consumerKey, consumerSecret);
+Intent intent = new Intent(this, OAuthActivity.class);
+intent.putExtra(OAuthActivity.EXTRA_OAUTH_CONFIG, config);
+startActivityForResult(intent, 1);
+```
+
+If everything goes fine, an external web browser will open Liferay's login page and will ask the credentials to the user.
+
+Once user has sucessfully authenticated and granted permission to your app or if an error has occurred, the `onActivityResult` method in your `Activity` will be called:
+
+```java
+@Override
+	public void onActivityResult(int request, int result, Intent intent) {
+		if (result == RESULT_OK) {
+			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
+				OAuthActivity.EXTRA_OAUTH_CONFIG);
+
+			String consumerKey = config.getConsumerKey();
+			String consumerSecret = config.getConsumerSecret();
+			String token = config.getToken();
+			String tokenSecret = config.getTokenSecret();
+			
+			// Create an OAuth instance with these values and pass to
+			// the SessionImpl constructor
+		}
+		else if (result == RESULT_CANCELED) {
+			Exception exception = (Exception)intent.getSerializableExtra(
+				OAuthActivity.EXTRA_EXCEPTION);
+	
+			exception.printStackTrace();
+		}
+	}
+```
+
+Check the `result` parameter to see if authentication was sucessful or not. If successful, get the `OAuthConfig` extra from the intent, it provides all 4 values required by `SessionImpl` to authenticate against Liferay's remote services. Read the [use](#use) section above to learn how use the Mobile SDK's  services with these values.
+
+In case of failure, the intent will contain a `Exception` extra with the error cause.
