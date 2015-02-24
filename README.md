@@ -70,7 +70,7 @@ webView.start(config, this);
 
 If everything goes fine, the webiew will open Liferay's login page and will ask the credentials to the user.
 
-As you may have notificed, the start method also requires a `OAuthCallback` parameter, the callback's `onSuccess` method will be called once user has sucessfully authenticated and granted permission to your app, if he hasn't granted or something went wrong, `onFailures` will be called instead:
+As you may have noticed, the start method also requires a `OAuthCallback` parameter, the callback's `onSuccess` method will be called once user has sucessfully authenticated and granted permission to your app, if he hasn't granted or something went wrong, `onFailure` will be called instead:
 
 ```java
 @Override
@@ -92,6 +92,15 @@ public void onFailure(Exception exception) {
 
 The `onSuccess` config parameter provides all 4 values required by `SessionImpl` to authenticate against Liferay's remote services. Read the [use](#use) section above to learn how use the Mobile SDK's  services with these values.
 
+The `OAuthCallback` interface also requires you to implement a `onCallbackURL` method, it's called when the authentication flow is completed and it's useful in case you want to hide the `OAuthWebView` instance:
+
+```java
+@Override
+public void onCallbackURL(Uri callbackURL) {
+	OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
+	webView.setVisibility(View.INVISIBLE);
+}
+```
 #### External Browser
 
 The instructions bellow give you an idea of the required steps to authenticate using an external browser. It's very important that you read and run the [sample app](sample-browser/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
