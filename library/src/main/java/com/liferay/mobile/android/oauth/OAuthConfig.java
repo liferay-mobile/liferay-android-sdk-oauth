@@ -39,17 +39,14 @@ public class OAuthConfig implements Serializable {
 	public OAuthConfig(
 		String server, String consumerKey, String consumerSecret) {
 
-		this(server, consumerKey, consumerSecret, CALLBACK_URL);
+		this(server, consumerKey, consumerSecret, null, null, CALLBACK_URL);
 	}
 
 	public OAuthConfig(
-		String server, String consumerKey, String consumerSecret,
-		String callbackURL) {
+		String consumerKey, String consumerSecret, String token,
+		String tokenSecret) {
 
-		_server = server;
-		_consumerKey = consumerKey;
-		_consumerSecret = consumerSecret;
-		_callbackURL = callbackURL;
+		this(null, consumerKey, consumerSecret, token, tokenSecret, null);
 	}
 
 	public String getCallbackURL() {
@@ -87,27 +84,39 @@ public class OAuthConfig implements Serializable {
 	}
 
 	public String getToken() {
-		if (_consumer == null) {
-			return null;
-		}
-
-		return _consumer.getToken();
+		return _token;
 	}
 
 	public String getTokenSecret() {
-		if (_consumer == null) {
-			return null;
-		}
-
-		return _consumer.getTokenSecret();
+		return _tokenSecret;
 	}
 
 	public String getVerifier() {
 		return _verifier;
 	}
 
+	public void setToken(String token) {
+		_token = token;
+	}
+
+	public void setTokenSecret(String tokenSecret) {
+		_tokenSecret = tokenSecret;
+	}
+
 	public void setVerifier(Uri callbackURL) {
 		_verifier = callbackURL.getQueryParameter("oauth_verifier");
+	}
+
+	protected OAuthConfig(
+		String server, String consumerKey, String consumerSecret, String token,
+		String tokenSecret, String callbackURL) {
+
+		_server = server;
+		_consumerKey = consumerKey;
+		_consumerSecret = consumerSecret;
+		_token = token;
+		_tokenSecret = tokenSecret;
+		_callbackURL = callbackURL;
 	}
 
 	protected String getAccessURL() {
@@ -137,6 +146,8 @@ public class OAuthConfig implements Serializable {
 	private String _consumerSecret;
 	private OAuthProvider _provider;
 	private String _server;
+	private String _token;
+	private String _tokenSecret;
 	private String _verifier;
 
 }

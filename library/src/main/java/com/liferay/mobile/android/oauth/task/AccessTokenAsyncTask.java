@@ -41,6 +41,9 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 			String verifier = _config.getVerifier();
 
 			provider.retrieveAccessToken(consumer, verifier);
+
+			_config.setToken(consumer.getToken());
+			_config.setTokenSecret(consumer.getTokenSecret());
 		}
 		catch (Exception e) {
 			Log.e(_TAG, "Could not retrieve access token.", e);

@@ -1,6 +1,6 @@
 ![Liferay Mobile SDK logo](https://github.com/liferay/liferay-mobile-sdk/raw/master/logo.png)
 
-# Liferay Android OAuth Library
+# Liferay Android SDK OAuth Library
 
 * [Setup](#setup)
 * [Use](#use)

@@ -17,7 +17,6 @@ package com.liferay.mobile.android.oauth;
 import com.liferay.mobile.android.auth.Authentication;
 
 import oauth.signpost.OAuthConsumer;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 
 import org.apache.http.HttpRequest;
 
@@ -27,33 +26,26 @@ import org.apache.http.HttpRequest;
 public class OAuth implements Authentication {
 
 	public OAuth(OAuthConfig config) {
-		this(
-			config.getConsumerKey(), config.getConsumerSecret(),
-			config.getToken(), config.getTokenSecret());
+		_config = config;
 	}
 
 	public OAuth(
 		String consumerKey, String consumerSecret, String token,
 		String tokenSecret) {
 
-		_consumerKey = consumerKey;
-		_consumerSecret = consumerSecret;
-		_token = token;
-		_tokenSecret = tokenSecret;
+		this(new OAuthConfig(consumerKey, consumerSecret, token, tokenSecret));
 	}
 
 	@Override
 	public void authenticate(HttpRequest request) throws Exception {
-		OAuthConsumer consumer = new CommonsHttpOAuthConsumer(
-			_consumerKey, _consumerSecret);
+		OAuthConsumer consumer = _config.getConsumer();
 
-		consumer.setTokenWithSecret(_token, _tokenSecret);
+		consumer.setTokenWithSecret(
+			_config.getToken(), _config.getTokenSecret());
+
 		consumer.sign(request);
 	}
 
-	private String _consumerKey;
-	private String _consumerSecret;
-	private String _token;
-	private String _tokenSecret;
+	private OAuthConfig _config;
 
 }
