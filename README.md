@@ -45,11 +45,11 @@ As you can see, you need to pass `consumerKey` and `consumerSecret` to the `OAut
 
 `token` and `tokenSecret` are the tokens required by the OAuth 1.0a protocol. They are used to identify the user once he has granted permission to your app. In order to obtain them, the user needs to authenticate through the OAuth flow, that is, your app must open a web browser showing the portal's login page and user needs to login and grant permission to your app.
 
-You can implement that part yourself, using any available Android OAuth 1.0a library. Alternatively, we provide helper classes to obtain `token` and `tokenSecret`. See the sections bellow.
+You can implement that part yourself, using any available Android OAuth 1.0a library. Alternatively, we provide helper classes to obtain `token` and `tokenSecret`. See the sections below.
 
 #### Internal WebView
 
-The instructions bellow give you an idea of the required steps to authenticate using an internal WebView in your app. It's very important that you read and run the [sample app](sample-webview/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
+The instructions below give you an idea of the required steps to authenticate using an internal WebView in your app. It's very important that you read and run the [sample app](sample-webview/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
 
 Create a `OAuthWebView` instance within your app layout XML file:
 
@@ -68,7 +68,7 @@ OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
 webView.start(config, this);
 ```
 
-If everything goes fine, the webiew will open Liferay's login page and will ask the credentials to the user.
+If everything goes fine, the WebView will open Liferay's login page and will ask the credentials to the user.
 
 As you may have noticed, the start method also requires a `OAuthCallback` parameter, the callback's `onSuccess` method will be called once user has sucessfully authenticated and granted permission to your app, if he hasn't granted or something went wrong, `onFailure` will be called instead:
 
@@ -103,7 +103,7 @@ public void onCallbackURL(Uri callbackURL) {
 ```
 #### External Browser
 
-The instructions bellow give you an idea of the required steps to authenticate using an external browser. It's very important that you read and run the [sample app](sample-browser/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
+The instructions below give you an idea of the required steps to authenticate using an external browser. It's very important that you read and run the [sample app](sample-browser/src/main/java/com/liferay/mobile/sample/activity/MainActivity.java).
 
 This will open the user's favorite mobile browser and the authentication flow will happen there as opposed to inside the app.
 
