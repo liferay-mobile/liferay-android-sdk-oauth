@@ -21,6 +21,10 @@ import com.squareup.otto.Bus;
  */
 public class BusUtil {
 
+	public static void post(Exception exception) {
+		getInstance().post(new Exception(exception.getMessage()));
+	}
+
 	public static void post(Object event) {
 		getInstance().post(event);
 	}
