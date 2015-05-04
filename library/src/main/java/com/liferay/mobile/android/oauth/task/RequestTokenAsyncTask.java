@@ -23,7 +23,6 @@ import com.liferay.mobile.android.oauth.bus.BusUtil;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
-import oauth.signpost.exception.OAuthCommunicationException;
 
 /**
  * @author Bruno Farache
