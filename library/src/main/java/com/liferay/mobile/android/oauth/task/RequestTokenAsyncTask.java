@@ -23,6 +23,7 @@ import com.liferay.mobile.android.oauth.bus.BusUtil;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
+import oauth.signpost.exception.OAuthCommunicationException;
 
 /**
  * @author Bruno Farache
@@ -55,7 +56,7 @@ public class RequestTokenAsyncTask extends AsyncTask<Object, Void, String> {
 
 	@Override
 	protected void onCancelled() {
-		BusUtil.post(_exception);
+		BusUtil.post(new Exception(_exception.getMessage()));
 	}
 
 	@Override

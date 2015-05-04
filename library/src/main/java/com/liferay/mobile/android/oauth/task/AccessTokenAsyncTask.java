@@ -56,7 +56,7 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 
 	@Override
 	protected void onCancelled() {
-		BusUtil.post(_exception);
+		BusUtil.post(new Exception(_exception.getMessage()));
 	}
 
 	@Override
