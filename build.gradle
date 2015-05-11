@@ -16,10 +16,8 @@ subprojects {
 		mavenCentral()
 	}
 
-	if (file('../../../formatter.gradle').exists()) {
-		apply from: '../../../formatter.gradle'
-		format.workingDir = 'src'
-	}
+	apply from: 'https://raw.githubusercontent.com/brunofarache/liferay-mobile-sdk/master/formatter.gradle'
+	format.workingDir = 'src'
 }
 
 configure(subprojects.findAll { it.name.startsWith('sample') }) {
