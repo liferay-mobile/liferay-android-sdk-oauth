@@ -46,20 +46,8 @@ public class OAuth implements Authentication {
 		consumer.sign(request);
 	}
 
-	public String getConsumerKey() {
-		return _config.getConsumerKey();
-	}
-
-	public String getConsumerSecret() {
-		return _config.getConsumerSecret();
-	}
-
-	public String getToken {
-		return _config.getToken();
-	}
-
-	public String getTokenSecret) {
-		return _config.getTokenSecret();
+	public OAuthConfig getConfig() {
+		return _config;
 	}
 
 	private OAuthConfig _config;
