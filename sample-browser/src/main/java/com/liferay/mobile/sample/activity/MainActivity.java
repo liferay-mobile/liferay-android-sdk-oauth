@@ -16,7 +16,10 @@ package com.liferay.mobile.sample.activity;
 
 import android.app.Activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 
 import android.os.Bundle;
 
@@ -40,6 +43,8 @@ import com.liferay.mobile.android.util.Validator;
 import com.liferay.mobile.android.v62.group.GroupService;
 import com.liferay.mobile.sample.R;
 
+import java.io.Serializable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,50 +55,6 @@ import org.json.JSONObject;
 public class MainActivity extends Activity {
 
 	public static final int AUTHENTICATE_REQUEST_CODE = 1;
-
-	@Override
-	public void onActivityResult(int request, int result, Intent intent) {
-		if (request != AUTHENTICATE_REQUEST_CODE) {
-			return;
-		}
-
-		if (result == RESULT_OK) {
-			OAuthConfig config = (OAuthConfig)intent.getSerializableExtra(
-				OAuthActivity.EXTRA_OAUTH_CONFIG);
-
-			String consumerKey = config.getConsumerKey();
-			String consumerSecret = config.getConsumerSecret();
-			String token = config.getToken();
-			String tokenSecret = config.getTokenSecret();
-
-			Log.d(_TAG, "Consumer key: " + consumerKey);
-			Log.d(_TAG, "Consumer secret: " + consumerSecret);
-			Log.d(_TAG, "Token: " + token);
-			Log.d(_TAG, "Token secret: " + tokenSecret);
-
-			String server = getString(R.string.oauth_server);
-			OAuth auth = new OAuth(config);
-			AsyncTaskCallback callback = _getPrintSitesCallback();
-
-			Session session = new SessionImpl(server, auth, callback);
-
-			GroupService service = new GroupService(session);
-
-			try {
-				service.getUserSites();
-			}
-			catch (Exception e) {
-				Log.e(_TAG, "Error during service call", e);
-			}
-		}
-		else if (result == RESULT_CANCELED) {
-			Exception exception = (Exception)intent.getSerializableExtra(
-				OAuthActivity.EXTRA_EXCEPTION);
-
-			Toast.makeText(
-				this, exception.getMessage(), Toast.LENGTH_LONG).show();
-		}
-	}
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -131,6 +92,52 @@ public class MainActivity extends Activity {
 			}
 
 		});
+
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+
+				if (intent.hasExtra(OAuthActivity.EXTRA_OAUTH_CONFIG)) {
+					Bundle extras = intent.getExtras();
+					Serializable serializable = extras.getSerializable(
+						OAuthActivity.EXTRA_OAUTH_CONFIG);
+
+					if (serializable instanceof OAuthConfig) {
+						OAuthConfig config = (OAuthConfig)serializable;
+
+						String consumerKey = config.getConsumerKey();
+						String consumerSecret = config.getConsumerSecret();
+						String token = config.getToken();
+						String tokenSecret = config.getTokenSecret();
+
+						Log.d(_TAG, "Consumer key: " + consumerKey);
+						Log.d(_TAG, "Consumer secret: " + consumerSecret);
+						Log.d(_TAG, "Token: " + token);
+						Log.d(_TAG, "Token secret: " + tokenSecret);
+
+						String server = getString(R.string.oauth_server);
+						OAuth auth = new OAuth(config);
+						AsyncTaskCallback callback = _getPrintSitesCallback();
+
+						Session session = new SessionImpl(
+							server, auth, callback);
+
+						GroupService service = new GroupService(session);
+
+						try {
+							service.getUserSites();
+						}
+						catch (Exception e) {
+							Log.e(_TAG, "Error during service call", e);
+						}
+					}
+				}
+			}
+		};
+
+		IntentFilter intentFilterResult = new IntentFilter();
+		intentFilterResult.addAction(OAuthActivity.EXTRA_OAUTH_CONFIG);
+		registerReceiver(receiver, intentFilterResult);
 	}
 
 	private AsyncTaskCallback _getPrintSitesCallback() {
