@@ -105,31 +105,18 @@ public class MainActivity extends Activity {
 					if (serializable instanceof OAuthConfig) {
 						OAuthConfig config = (OAuthConfig)serializable;
 
-						String consumerKey = config.getConsumerKey();
-						String consumerSecret = config.getConsumerSecret();
-						String token = config.getToken();
-						String tokenSecret = config.getTokenSecret();
+						_getUserSites(config);
+					}
+				}
+				else if (intent.hasExtra(OAuthActivity.EXTRA_EXCEPTION)) {
+					Bundle extras = intent.getExtras();
+					Serializable serializable = extras.getSerializable(
+						OAuthActivity.EXTRA_EXCEPTION);
 
-						Log.d(_TAG, "Consumer key: " + consumerKey);
-						Log.d(_TAG, "Consumer secret: " + consumerSecret);
-						Log.d(_TAG, "Token: " + token);
-						Log.d(_TAG, "Token secret: " + tokenSecret);
+					if (serializable instanceof Exception) {
+						Exception exception = (Exception)serializable;
 
-						String server = getString(R.string.oauth_server);
-						OAuth auth = new OAuth(config);
-						AsyncTaskCallback callback = _getPrintSitesCallback();
-
-						Session session = new SessionImpl(
-							server, auth, callback);
-
-						GroupService service = new GroupService(session);
-
-						try {
-							service.getUserSites();
-						}
-						catch (Exception e) {
-							Log.e(_TAG, "Error during service call", e);
-						}
+						Log.e(_TAG, "Error during authentication: ", exception);
 					}
 				}
 			}
@@ -169,6 +156,33 @@ public class MainActivity extends Activity {
 			}
 
 		};
+	}
+
+	private void _getUserSites(OAuthConfig config) {
+		String consumerKey = config.getConsumerKey();
+		String consumerSecret = config.getConsumerSecret();
+		String token = config.getToken();
+		String tokenSecret = config.getTokenSecret();
+
+		Log.d(_TAG, "Consumer key: " + consumerKey);
+		Log.d(_TAG, "Consumer secret: " + consumerSecret);
+		Log.d(_TAG, "Token: " + token);
+		Log.d(_TAG, "Token secret: " + tokenSecret);
+
+		String server = getString(R.string.oauth_server);
+		OAuth auth = new OAuth(config);
+		AsyncTaskCallback callback = _getPrintSitesCallback();
+
+		Session session = new SessionImpl(server, auth, callback);
+
+		GroupService service = new GroupService(session);
+
+		try {
+			service.getUserSites();
+		}
+		catch (Exception e) {
+			Log.e(_TAG, "Error during service call", e);
+		}
 	}
 
 	private static final String _TAG = MainActivity.class.getSimpleName();
