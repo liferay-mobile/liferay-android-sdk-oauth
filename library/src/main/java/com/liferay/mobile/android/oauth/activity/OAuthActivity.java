@@ -100,6 +100,9 @@ public class OAuthActivity extends Activity {
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_OAUTH_CONFIG, config);
 
+		intent.setAction(EXTRA_OAUTH_CONFIG);
+		sendBroadcast(intent);
+
 		setResult(RESULT_OK, intent);
 
 		finish();
