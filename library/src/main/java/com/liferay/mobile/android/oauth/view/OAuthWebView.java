@@ -92,6 +92,7 @@ public class OAuthWebView extends WebView {
 	}
 
 	public boolean allowAutomatically;
+	public String callbackDenyUrl;
 	public String elementIdButtonGrantAccess;
 
 	protected void onCallbackURL(Uri callbackURL) {
@@ -102,6 +103,9 @@ public class OAuthWebView extends WebView {
 		task.execute();
 	}
 
+	protected void onDeniedAccess() {
+		_callback.onDeniedAccess();
+	}
 
 	protected void onPreLoadGrantAccessPage() {
 		if (allowAutomatically) {

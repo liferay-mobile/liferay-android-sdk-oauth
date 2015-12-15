@@ -57,6 +57,14 @@ public class OAuthWebClient extends WebViewClient {
 			webView.onPreLoadGrantAccessPage();
 		}
 
+		if ((webView.callbackDenyUrl != null) &&
+			URL.contains(webView.callbackDenyUrl)) {
+
+			webView.onDeniedAccess();
+
+			return true;
+		}
+
 		return super.shouldOverrideUrlLoading(view, URL);
 	}
 
