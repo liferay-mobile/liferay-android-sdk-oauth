@@ -22,6 +22,8 @@ import android.os.AsyncTask;
 
 import android.util.AttributeSet;
 
+import android.view.View;
+
 import android.webkit.WebView;
 
 import com.liferay.mobile.android.oauth.OAuthCallback;
@@ -78,12 +80,19 @@ public class OAuthWebView extends WebView {
 		_config = config;
 		_callback = callback;
 
+		if (elementIdButtonGrantAccess == null) {
+			elementIdButtonGrantAccess = DEFAUL_ELEMENT_ID_BUTTON_GRANT_ACCESS;
+		}
+
 		getSettings().setJavaScriptEnabled(true);
 		setWebViewClient(new OAuthWebClient(_config.getCallbackURL()));
 
 		AsyncTask task = new RequestTokenAsyncTask(_config);
 		task.execute();
 	}
+
+	public boolean allowAutomatically;
+	public String elementIdButtonGrantAccess;
 
 	protected void onCallbackURL(Uri callbackURL) {
 		_config.setVerifier(callbackURL);
@@ -92,6 +101,19 @@ public class OAuthWebView extends WebView {
 		AccessTokenAsyncTask task = new AccessTokenAsyncTask(_config);
 		task.execute();
 	}
+
+
+	protected void onPreLoadGrantAccessPage() {
+		if (allowAutomatically) {
+			setVisibility(View.INVISIBLE);
+			_callback.onGrantedAccess();
+		}
+	}
+
+	protected static final String DEFAUL_ELEMENT_ID_BUTTON_GRANT_ACCESS =
+	"_3_WAR_oauthportlet_fm";
+
+	protected static final String OAUTH_TOKEN = "oauthportlet_oauth_token";
 
 	private OAuthCallback _callback;
 	private OAuthConfig _config;

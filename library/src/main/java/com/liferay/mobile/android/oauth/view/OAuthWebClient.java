@@ -16,6 +16,9 @@ package com.liferay.mobile.android.oauth.view;
 
 import android.net.Uri;
 
+import android.os.Build;
+
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -32,9 +35,29 @@ public class OAuthWebClient extends WebViewClient {
 	public void onPageFinished(WebView view, String URL) {
 		OAuthWebView webView = (OAuthWebView)view;
 
+		if (URL.contains(OAuthWebView.OAUTH_TOKEN) &&
+			webView.allowAutomatically) {
+				String command =
+					"javascript:(function(){document.getElementById('" +
+					webView.elementIdButtonGrantAccess + "').submit();})()";
+
+			webView.loadUrl(command);
+		}
+
 		if (URL.startsWith(_callbackURL)) {
 			webView.onCallbackURL(Uri.parse(URL));
 		}
+	}
+
+	@Override
+	public boolean shouldOverrideUrlLoading(WebView view, String URL) {
+		OAuthWebView webView = (OAuthWebView)view;
+
+		if (URL.contains(OAuthWebView.OAUTH_TOKEN)) {
+			webView.onPreLoadGrantAccessPage();
+		}
+
+		return super.shouldOverrideUrlLoading(view, URL);
 	}
 
 	private String _callbackURL;
