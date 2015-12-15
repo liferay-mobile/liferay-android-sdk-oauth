@@ -95,11 +95,21 @@ public class MainActivity extends Activity implements OAuthCallback {
 
 		_progressBar = (ProgressBar)findViewById(R.id.progressBar);
 	}
+
+	@Override
+	public void onDeniedAccess() {
+		_webView.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
 	public void onFailure(Exception exception) {
 		Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+
+		_progressBar.setVisibility(View.INVISIBLE);
+	}
+
+	public void onGrantedAccess() {
+		_progressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -128,6 +138,8 @@ public class MainActivity extends Activity implements OAuthCallback {
 		catch (Exception e) {
 			Log.e(_TAG, "Error during service call", e);
 		}
+
+		_progressBar.setVisibility(View.INVISIBLE);
 	}
 
 	private AsyncTaskCallback _getPrintSitesCallback() {
