@@ -23,7 +23,11 @@ public interface OAuthCallback {
 
 	public void onCallbackURL(Uri callbackURL);
 
+	public void onDeniedAccess();
+
 	public void onFailure(Exception exception);
+
+	public void onGrantedAccess();
 
 	public void onSuccess(OAuthConfig config);
 
