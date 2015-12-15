@@ -46,6 +46,7 @@ public class OAuthWebClient extends WebViewClient {
 
 		if (URL.startsWith(_callbackURL)) {
 			webView.onCallbackURL(Uri.parse(URL));
+			_clearAllCookies();
 		}
 	}
 
@@ -61,11 +62,21 @@ public class OAuthWebClient extends WebViewClient {
 			URL.contains(webView.callbackDenyUrl)) {
 
 			webView.onDeniedAccess();
+			_clearAllCookies();
 
 			return true;
 		}
 
 		return super.shouldOverrideUrlLoading(view, URL);
+	}
+
+	private void _clearAllCookies() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			CookieManager.getInstance().removeAllCookies(null);
+		}
+		else {
+			CookieManager.getInstance().removeAllCookie();
+		}
 	}
 
 	private String _callbackURL;
