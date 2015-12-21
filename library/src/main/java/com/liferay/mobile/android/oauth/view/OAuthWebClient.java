@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.liferay.mobile.android.oauth.OAuthCallback.Page;
 import com.liferay.mobile.android.util.Validator;
 
 /**
@@ -52,7 +53,7 @@ public class OAuthWebClient extends WebViewClient {
 		OAuthWebView webView = (OAuthWebView)view;
 
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN)) {
-			webView.onAskPermissionPage();
+			webView.onLoadPage(Page.ASK_PERMISSION);
 
 			return false;
 		}
@@ -66,7 +67,7 @@ public class OAuthWebClient extends WebViewClient {
 		String denyURL = webView.getDenyURL();
 
 		if (Validator.isNotNull(denyURL) && URL.contains(denyURL)) {
-			webView.onDenied();
+			webView.onLoadPage(Page.DENIED);
 
 			return true;
 		}
