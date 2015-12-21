@@ -51,7 +51,7 @@ public class OAuthWebClient extends WebViewClient {
 
 		if (URL.startsWith(callbackURL)) {
 			webView.onCallbackURL(Uri.parse(URL));
-			_clearAllCookies();
+			removeAllCookies();
 		}
 	}
 
@@ -69,7 +69,7 @@ public class OAuthWebClient extends WebViewClient {
 
 		if (Validator.isNotNull(denyURL) && URL.contains(denyURL)) {
 			webView.onDenied();
-			_clearAllCookies();
+			removeAllCookies();
 
 			return true;
 		}
@@ -77,18 +77,21 @@ public class OAuthWebClient extends WebViewClient {
 		return super.shouldOverrideUrlLoading(view, URL);
 	}
 
+	@SuppressWarnings("deprecation")
+	protected void removeAllCookies() {
+		CookieManager manager = CookieManager.getInstance();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			manager.removeAllCookies(null);
+		}
+		else {
+			manager.removeAllCookie();
+		}
+	}
+
 	protected static final String OAUTH_PORTLET_FORM_ID =
 		"_3_WAR_oauthportlet_fm";
 
 	protected String callbackURL;
-
-	private void _clearAllCookies() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			CookieManager.getInstance().removeAllCookies(null);
-		}
-		else {
-			CookieManager.getInstance().removeAllCookie();
-		}
-	}
 
 }
