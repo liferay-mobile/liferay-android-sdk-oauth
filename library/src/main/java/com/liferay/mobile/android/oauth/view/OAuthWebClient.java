@@ -16,9 +16,6 @@ package com.liferay.mobile.android.oauth.view;
 
 import android.net.Uri;
 
-import android.os.Build;
-
-import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -48,11 +45,6 @@ public class OAuthWebClient extends WebViewClient {
 
 			return;
 		}
-
-		if (URL.startsWith(callbackURL)) {
-			webView.onCallbackURL(Uri.parse(URL));
-			removeAllCookies();
-		}
 	}
 
 	@Override
@@ -60,7 +52,13 @@ public class OAuthWebClient extends WebViewClient {
 		OAuthWebView webView = (OAuthWebView)view;
 
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN)) {
-			webView.onPreGrant();
+			webView.onAskPermissionPage();
+
+			return false;
+		}
+
+		if (URL.startsWith(callbackURL)) {
+			webView.onCallbackURL(Uri.parse(URL));
 
 			return false;
 		}
@@ -69,24 +67,11 @@ public class OAuthWebClient extends WebViewClient {
 
 		if (Validator.isNotNull(denyURL) && URL.contains(denyURL)) {
 			webView.onDenied();
-			removeAllCookies();
 
 			return true;
 		}
 
 		return super.shouldOverrideUrlLoading(view, URL);
-	}
-
-	@SuppressWarnings("deprecation")
-	protected void removeAllCookies() {
-		CookieManager manager = CookieManager.getInstance();
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			manager.removeAllCookies(null);
-		}
-		else {
-			manager.removeAllCookie();
-		}
 	}
 
 	protected static final String OAUTH_PORTLET_FORM_ID =

@@ -19,9 +19,11 @@ import android.content.Context;
 import android.net.Uri;
 
 import android.os.AsyncTask;
+import android.os.Build;
 
 import android.util.AttributeSet;
 
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 
 import com.liferay.mobile.android.oauth.OAuthCallback;
@@ -92,27 +94,27 @@ public class OAuthWebView extends WebView {
 		start(config, callback, denyURL, false);
 	}
 
+	protected void onAskPermissionPage() {
+		callback.onLoadPage(OAuthCallback.Page.ASK_PERMISSION, this, getUrl());
+	}
+
 	protected void onCallbackURL(Uri callbackURL) {
 		config.setVerifier(callbackURL);
-		callback.onCallbackURL(callbackURL);
+		callback.onLoadPage(OAuthCallback.Page.GRANTED, this, getUrl());
 
 		AccessTokenAsyncTask task = new AccessTokenAsyncTask(config);
 		task.execute();
 	}
 
 	protected void onDenied() {
-		callback.onDenied();
-	}
-
-	protected void onPreGrant() {
-		if (grantAutomatically) {
-			callback.onPreGrant();
-		}
+		callback.onLoadPage(OAuthCallback.Page.DENIED, this, getUrl());
 	}
 
 	protected void start(
 		OAuthConfig config, OAuthCallback callback, String denyURL,
 		boolean grantAutomatically) {
+
+		removeAllCookies();
 
 		this.config = config;
 		this.callback = callback;
@@ -132,5 +134,17 @@ public class OAuthWebView extends WebView {
 	protected OAuthConfig config;
 	protected String denyURL;
 	protected boolean grantAutomatically;
+
+	@SuppressWarnings("deprecation")
+	private void removeAllCookies() {
+		CookieManager manager = CookieManager.getInstance();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			manager.removeAllCookies(null);
+		}
+		else {
+			manager.removeAllCookie();
+		}
+	}
 
 }
