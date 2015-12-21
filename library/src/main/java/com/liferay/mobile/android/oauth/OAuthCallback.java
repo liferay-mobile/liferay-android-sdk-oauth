@@ -14,21 +14,21 @@
 
 package com.liferay.mobile.android.oauth;
 
-import android.net.Uri;
+import android.webkit.WebView;
 
 /**
  * @author Bruno Farache
  */
 public interface OAuthCallback {
 
-	void onCallbackURL(Uri callbackURL);
-
-	void onDenied();
-
 	void onFailure(Exception exception);
 
-	void onPreGrant();
+	void onLoadPage(Page page, WebView webView, String URL);
 
 	void onSuccess(OAuthConfig config);
+
+	public enum Page {
+		ASK_PERMISSION, DENIED, GRANTED;
+	}
 
 }
