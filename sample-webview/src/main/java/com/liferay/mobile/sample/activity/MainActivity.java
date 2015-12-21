@@ -88,7 +88,6 @@ public class MainActivity extends Activity implements OAuthCallback {
 			public void onClick(View view) {
 				_webView.loadUrl("about:blank");
 				_webView.setVisibility(View.VISIBLE);
-				_webView.allowAutomatically = true;
 				_webView.start(config, MainActivity.this);
 			}
 
@@ -98,7 +97,7 @@ public class MainActivity extends Activity implements OAuthCallback {
 	}
 
 	@Override
-	public void onDeniedAccess() {
+	public void onDenied() {
 		_webView.setVisibility(View.INVISIBLE);
 	}
 
@@ -109,7 +108,7 @@ public class MainActivity extends Activity implements OAuthCallback {
 		_progressBar.setVisibility(View.INVISIBLE);
 	}
 
-	public void onGrantedAccess() {
+	public void onGranted() {
 		_progressBar.setVisibility(View.VISIBLE);
 	}
 

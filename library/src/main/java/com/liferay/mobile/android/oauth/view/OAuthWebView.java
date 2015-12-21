@@ -47,6 +47,14 @@ public class OAuthWebView extends WebView {
 		super(context, attributes);
 	}
 
+	public String getDenyURL() {
+		return denyURL;
+	}
+
+	public boolean isGrantAutomatically() {
+		return grantAutomatically;
+	}
+
 	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
@@ -68,58 +76,64 @@ public class OAuthWebView extends WebView {
 
 	@Subscribe
 	public void onFailure(Exception exception) {
-		_callback.onFailure(exception);
+		callback.onFailure(exception);
 	}
 
 	@Subscribe
 	public void onSuccess(OAuthConfig config) {
-		_callback.onSuccess(config);
+		callback.onSuccess(config);
 	}
 
 	public void start(OAuthConfig config, OAuthCallback callback) {
-		_config = config;
-		_callback = callback;
-
-		if (elementIdButtonGrantAccess == null) {
-			elementIdButtonGrantAccess = DEFAUL_ELEMENT_ID_BUTTON_GRANT_ACCESS;
-		}
-
-		getSettings().setJavaScriptEnabled(true);
-		setWebViewClient(new OAuthWebClient(_config.getCallbackURL()));
-
-		AsyncTask task = new RequestTokenAsyncTask(_config);
-		task.execute();
+		start(config, callback, null, true);
 	}
 
-	public boolean allowAutomatically;
-	public String callbackDenyUrl;
-	public String elementIdButtonGrantAccess;
+	public void start(
+		OAuthConfig config, OAuthCallback callback, String denyURL) {
+
+		start(config, callback, denyURL, false);
+	}
+
+	protected void hide() {
+		if (grantAutomatically) {
+			setVisibility(View.INVISIBLE);
+			callback.onGranted();
+		}
+	}
 
 	protected void onCallbackURL(Uri callbackURL) {
-		_config.setVerifier(callbackURL);
-		_callback.onCallbackURL(callbackURL);
+		config.setVerifier(callbackURL);
+		callback.onCallbackURL(callbackURL);
 
-		AccessTokenAsyncTask task = new AccessTokenAsyncTask(_config);
+		AccessTokenAsyncTask task = new AccessTokenAsyncTask(config);
 		task.execute();
 	}
 
-	protected void onDeniedAccess() {
-		_callback.onDeniedAccess();
+	protected void onDenied() {
+		callback.onDenied();
 	}
 
-	protected void onPreLoadGrantAccessPage() {
-		if (allowAutomatically) {
-			setVisibility(View.INVISIBLE);
-			_callback.onGrantedAccess();
-		}
-	}
+	protected void start(
+		OAuthConfig config, OAuthCallback callback, String denyURL,
+		boolean grantAutomatically) {
 
-	protected static final String DEFAUL_ELEMENT_ID_BUTTON_GRANT_ACCESS =
-	"_3_WAR_oauthportlet_fm";
+		this.config = config;
+		this.callback = callback;
+		this.denyURL = denyURL;
+		this.grantAutomatically = grantAutomatically;
+
+		getSettings().setJavaScriptEnabled(true);
+		setWebViewClient(new OAuthWebClient(this.config.getCallbackURL()));
+
+		AsyncTask task = new RequestTokenAsyncTask(this.config);
+		task.execute();
+	}
 
 	protected static final String OAUTH_TOKEN = "oauthportlet_oauth_token";
 
-	private OAuthCallback _callback;
-	private OAuthConfig _config;
+	protected OAuthCallback callback;
+	protected OAuthConfig config;
+	protected String denyURL;
+	protected boolean grantAutomatically;
 
 }

@@ -22,6 +22,8 @@ import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.liferay.mobile.android.util.Validator;
+
 /**
  * @author Bruno Farache
  */
@@ -36,12 +38,12 @@ public class OAuthWebClient extends WebViewClient {
 		OAuthWebView webView = (OAuthWebView)view;
 
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN) &&
-			webView.allowAutomatically) {
-				String command =
-					"javascript:(function(){document.getElementById('" +
-					webView.elementIdButtonGrantAccess + "').submit();})()";
+			webView.isGrantAutomatically()) {
+				String javascript = "javascript:(function(){" +
+					"document.getElementById('" + OAUTH_PORTLET_FORM_ID +
+					"').submit();})()";
 
-			webView.loadUrl(command);
+			webView.loadUrl(javascript);
 		}
 
 		if (URL.startsWith(_callbackURL)) {
@@ -55,13 +57,13 @@ public class OAuthWebClient extends WebViewClient {
 		OAuthWebView webView = (OAuthWebView)view;
 
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN)) {
-			webView.onPreLoadGrantAccessPage();
+			webView.hide();
 		}
 
-		if ((webView.callbackDenyUrl != null) &&
-			URL.contains(webView.callbackDenyUrl)) {
+		String denyURL = webView.getDenyURL();
 
-			webView.onDeniedAccess();
+		if (Validator.isNotNull(denyURL) && URL.contains(denyURL)) {
+			webView.onDenied();
 			_clearAllCookies();
 
 			return true;
@@ -69,6 +71,9 @@ public class OAuthWebClient extends WebViewClient {
 
 		return super.shouldOverrideUrlLoading(view, URL);
 	}
+
+	protected static final String OAUTH_PORTLET_FORM_ID =
+		"_3_WAR_oauthportlet_fm";
 
 	private void _clearAllCookies() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

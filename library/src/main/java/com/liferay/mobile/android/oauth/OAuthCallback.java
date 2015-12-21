@@ -21,14 +21,14 @@ import android.net.Uri;
  */
 public interface OAuthCallback {
 
-	public void onCallbackURL(Uri callbackURL);
+	void onCallbackURL(Uri callbackURL);
 
-	public void onDeniedAccess();
+	void onDenied();
 
-	public void onFailure(Exception exception);
+	void onFailure(Exception exception);
 
-	public void onGrantedAccess();
+	void onGranted();
 
-	public void onSuccess(OAuthConfig config);
+	void onSuccess(OAuthConfig config);
 
 }
