@@ -22,8 +22,6 @@ import android.os.AsyncTask;
 
 import android.util.AttributeSet;
 
-import android.view.View;
-
 import android.webkit.WebView;
 
 import com.liferay.mobile.android.oauth.OAuthCallback;
@@ -94,13 +92,6 @@ public class OAuthWebView extends WebView {
 		start(config, callback, denyURL, false);
 	}
 
-	protected void hide() {
-		if (grantAutomatically) {
-			setVisibility(View.INVISIBLE);
-			callback.onGranted();
-		}
-	}
-
 	protected void onCallbackURL(Uri callbackURL) {
 		config.setVerifier(callbackURL);
 		callback.onCallbackURL(callbackURL);
@@ -111,6 +102,12 @@ public class OAuthWebView extends WebView {
 
 	protected void onDenied() {
 		callback.onDenied();
+	}
+
+	protected void onPreGrant() {
+		if (grantAutomatically) {
+			callback.onPreGrant();
+		}
 	}
 
 	protected void start(

@@ -30,7 +30,7 @@ import com.liferay.mobile.android.util.Validator;
 public class OAuthWebClient extends WebViewClient {
 
 	public OAuthWebClient(String callbackURL) {
-		_callbackURL = callbackURL;
+		this.callbackURL = callbackURL;
 	}
 
 	@Override
@@ -39,14 +39,17 @@ public class OAuthWebClient extends WebViewClient {
 
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN) &&
 			webView.isGrantAutomatically()) {
-				String javascript = "javascript:(function(){" +
-					"document.getElementById('" + OAUTH_PORTLET_FORM_ID +
-					"').submit();})()";
+
+			String javascript = "javascript:(function(){" +
+				"document.getElementById('" + OAUTH_PORTLET_FORM_ID +
+				"').submit();})()";
 
 			webView.loadUrl(javascript);
+
+			return;
 		}
 
-		if (URL.startsWith(_callbackURL)) {
+		if (URL.startsWith(callbackURL)) {
 			webView.onCallbackURL(Uri.parse(URL));
 			_clearAllCookies();
 		}
@@ -57,7 +60,9 @@ public class OAuthWebClient extends WebViewClient {
 		OAuthWebView webView = (OAuthWebView)view;
 
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN)) {
-			webView.hide();
+			webView.onPreGrant();
+
+			return false;
 		}
 
 		String denyURL = webView.getDenyURL();
@@ -75,6 +80,8 @@ public class OAuthWebClient extends WebViewClient {
 	protected static final String OAUTH_PORTLET_FORM_ID =
 		"_3_WAR_oauthportlet_fm";
 
+	protected String callbackURL;
+
 	private void _clearAllCookies() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			CookieManager.getInstance().removeAllCookies(null);
@@ -83,7 +90,5 @@ public class OAuthWebClient extends WebViewClient {
 			CookieManager.getInstance().removeAllCookie();
 		}
 	}
-
-	private String _callbackURL;
 
 }

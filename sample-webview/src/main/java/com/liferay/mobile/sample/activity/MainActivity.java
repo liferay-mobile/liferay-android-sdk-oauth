@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements OAuthCallback {
 		_progressBar.setVisibility(View.INVISIBLE);
 	}
 
-	public void onGranted() {
+	public void onPreGrant() {
 		_progressBar.setVisibility(View.VISIBLE);
 	}
 

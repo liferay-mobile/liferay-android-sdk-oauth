@@ -27,7 +27,7 @@ public interface OAuthCallback {
 
 	void onFailure(Exception exception);
 
-	void onGranted();
+	void onPreGrant();
 
 	void onSuccess(OAuthConfig config);
 
