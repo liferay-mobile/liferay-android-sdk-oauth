@@ -21,14 +21,14 @@ import android.webkit.WebView;
  */
 public interface OAuthCallback {
 
+	enum Page {
+		ASK_PERMISSION, DENIED, GRANTED;
+	}
+
 	void onFailure(Exception exception);
 
 	void onLoadPage(Page page, WebView webView, String URL);
 
 	void onSuccess(OAuthConfig config);
-
-	public enum Page {
-		ASK_PERMISSION, DENIED, GRANTED;
-	}
 
 }

@@ -16,8 +16,6 @@ package com.liferay.mobile.sample.activity;
 
 import android.app.Activity;
 
-import android.net.Uri;
-
 import android.os.Bundle;
 
 import android.util.Log;
@@ -77,15 +75,15 @@ public class MainActivity extends Activity implements OAuthCallback {
 			server, consumerKey, consumerSecret);
 
 		Button login = (Button)findViewById(R.id.login);
-		_webView = (OAuthWebView)findViewById(R.id.webView);
+		final OAuthWebView webView = (OAuthWebView)findViewById(R.id.webView);
 
 		login.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
-				_webView.loadUrl("about:blank");
-				_webView.setVisibility(View.VISIBLE);
-				_webView.start(config, MainActivity.this);
+				webView.loadUrl("about:blank");
+				webView.setVisibility(View.VISIBLE);
+				webView.start(config, MainActivity.this);
 			}
 
 		});
@@ -103,11 +101,11 @@ public class MainActivity extends Activity implements OAuthCallback {
 	@Override
 	public void onLoadPage(Page page, WebView webView, String URL) {
 		if (page == Page.ASK_PERMISSION) {
-			_webView.setVisibility(View.INVISIBLE);
+			webView.setVisibility(View.INVISIBLE);
 			_progressBar.setVisibility(View.VISIBLE);
 		}
-		else if (page == Page.DENIED || page == Page.GRANTED) {
-			_webView.setVisibility(View.INVISIBLE);
+		else if ((page == Page.DENIED) || (page == Page.GRANTED)) {
+			webView.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -175,6 +173,5 @@ public class MainActivity extends Activity implements OAuthCallback {
 	private static final String _TAG = MainActivity.class.getSimpleName();
 
 	private ProgressBar _progressBar;
-	private OAuthWebView _webView;
 
 }
