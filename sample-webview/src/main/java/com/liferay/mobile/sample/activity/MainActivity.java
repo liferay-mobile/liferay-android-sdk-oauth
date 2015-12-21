@@ -109,6 +109,7 @@ public class MainActivity extends Activity implements OAuthCallback {
 	}
 
 	public void onPreGrant() {
+		_webView.setVisibility(View.INVISIBLE);
 		_progressBar.setVisibility(View.VISIBLE);
 	}
 
