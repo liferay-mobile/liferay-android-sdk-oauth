@@ -100,12 +100,10 @@ public class MainActivity extends Activity implements OAuthCallback {
 
 	@Override
 	public void onLoadPage(Page page, WebView webView, String URL) {
+		webView.setVisibility(View.INVISIBLE);
+
 		if (page == Page.ASK_PERMISSION) {
-			webView.setVisibility(View.INVISIBLE);
 			_progressBar.setVisibility(View.VISIBLE);
-		}
-		else if ((page == Page.DENIED) || (page == Page.GRANTED)) {
-			webView.setVisibility(View.INVISIBLE);
 		}
 	}
 

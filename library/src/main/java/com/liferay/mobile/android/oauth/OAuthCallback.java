@@ -22,7 +22,7 @@ import android.webkit.WebView;
 public interface OAuthCallback {
 
 	enum Page {
-		ASK_PERMISSION, DENIED, GRANTED;
+		ASK_PERMISSION, DENIED, GRANTED
 	}
 
 	void onFailure(Exception exception);
