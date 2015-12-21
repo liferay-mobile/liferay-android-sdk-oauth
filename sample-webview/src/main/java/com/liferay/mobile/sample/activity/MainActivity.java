@@ -25,6 +25,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import android.webkit.WebView;
+
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -50,11 +52,6 @@ import org.json.JSONObject;
  * @author Bruno Farache
  */
 public class MainActivity extends Activity implements OAuthCallback {
-
-	@Override
-	public void onCallbackURL(Uri callbackURL) {
-		_webView.setVisibility(View.INVISIBLE);
-	}
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -97,20 +94,21 @@ public class MainActivity extends Activity implements OAuthCallback {
 	}
 
 	@Override
-	public void onDenied() {
-		_webView.setVisibility(View.INVISIBLE);
-	}
-
-	@Override
 	public void onFailure(Exception exception) {
 		Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
 
 		_progressBar.setVisibility(View.INVISIBLE);
 	}
 
-	public void onPreGrant() {
-		_webView.setVisibility(View.INVISIBLE);
-		_progressBar.setVisibility(View.VISIBLE);
+	@Override
+	public void onLoadPage(Page page, WebView webView, String URL) {
+		if (page == Page.ASK_PERMISSION) {
+			_webView.setVisibility(View.INVISIBLE);
+			_progressBar.setVisibility(View.VISIBLE);
+		}
+		else if (page == Page.DENIED || page == Page.GRANTED) {
+			_webView.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	@Override
