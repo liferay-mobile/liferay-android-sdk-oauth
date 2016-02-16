@@ -15,10 +15,9 @@
 package com.liferay.mobile.android.oauth;
 
 import com.liferay.mobile.android.auth.Authentication;
+import com.liferay.mobile.android.http.Request;
 
 import oauth.signpost.OAuthConsumer;
-
-import org.apache.http.HttpRequest;
 
 /**
  * @author Bruno Farache
@@ -37,7 +36,7 @@ public class OAuth implements Authentication {
 	}
 
 	@Override
-	public void authenticate(HttpRequest request) throws Exception {
+	public void authenticate(Request request) throws Exception {
 		OAuthConsumer consumer = _config.getConsumer();
 
 		consumer.setTokenWithSecret(

@@ -15,14 +15,13 @@
 package com.liferay.mobile.android.oauth.task;
 
 import android.os.AsyncTask;
-
 import android.util.Log;
 
 import com.liferay.mobile.android.oauth.OAuthConfig;
 import com.liferay.mobile.android.oauth.bus.BusUtil;
 
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.OAuthProvider;
+import oauth.signpost.AbstractOAuthConsumer;
+import oauth.signpost.AbstractOAuthProvider;
 
 /**
  * @author Bruno Farache
@@ -36,8 +35,8 @@ public class AccessTokenAsyncTask extends AsyncTask<Object, Void, Void> {
 	@Override
 	protected Void doInBackground(Object... params) {
 		try {
-			OAuthProvider provider = _config.getProvider();
-			OAuthConsumer consumer = _config.getConsumer();
+			AbstractOAuthProvider provider = _config.getProvider();
+			AbstractOAuthConsumer consumer = _config.getConsumer();
 			String verifier = _config.getVerifier();
 
 			provider.retrieveAccessToken(consumer, verifier);
