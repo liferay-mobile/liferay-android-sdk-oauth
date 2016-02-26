@@ -19,12 +19,14 @@ import com.liferay.mobile.android.http.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
+import oauth.signpost.http.HttpResponse;
+
 /**
  * @author Javier Gamarra
  */
-public class HttpResponseAdapter implements oauth.signpost.http.HttpResponse {
+public class ResponseWrapper implements HttpResponse {
 
-	public HttpResponseAdapter(Response response) {
+	public ResponseWrapper(Response response) {
 		this.response = response;
 	}
 

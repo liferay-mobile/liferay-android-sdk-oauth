@@ -16,8 +16,8 @@ package com.liferay.mobile.android.oauth;
 
 import android.net.Uri;
 
-import com.liferay.mobile.android.oauth.signpost.RequestOAuthConsumer;
-import com.liferay.mobile.android.oauth.signpost.RequestOAuthProvider;
+import com.liferay.mobile.android.oauth.signpost.OAuthConsumer;
+import com.liferay.mobile.android.oauth.signpost.OAuthProvider;
 
 import java.io.Serializable;
 
@@ -56,7 +56,7 @@ public class OAuthConfig implements Serializable {
 
 	public AbstractOAuthConsumer getConsumer() {
 		if (_consumer == null) {
-			_consumer = new RequestOAuthConsumer(_consumerKey, _consumerSecret);
+			_consumer = new OAuthConsumer(_consumerKey, _consumerSecret);
 		}
 
 		return _consumer;
@@ -76,9 +76,7 @@ public class OAuthConfig implements Serializable {
 			String accessURL = getAccessURL();
 			String authorizeURL = getAuthorizeURL();
 
-			_provider = new RequestOAuthProvider(
-				requestURL, accessURL, authorizeURL) {
-			};
+			_provider = new OAuthProvider(requestURL, accessURL, authorizeURL);
 		}
 
 		return _provider;

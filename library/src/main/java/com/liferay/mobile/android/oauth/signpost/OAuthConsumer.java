@@ -22,15 +22,15 @@ import oauth.signpost.http.HttpRequest;
 /**
  * @author Javier Gamarra
  */
-public class RequestOAuthConsumer extends AbstractOAuthConsumer {
+public class OAuthConsumer extends AbstractOAuthConsumer {
 
-	public RequestOAuthConsumer(String consumerKey, String consumerSecret) {
+	public OAuthConsumer(String consumerKey, String consumerSecret) {
 		super(consumerKey, consumerSecret);
 	}
 
 	@Override
 	protected HttpRequest wrap(Object request) {
-		return new HttpRequestAdapter((Request)request);
+		return new RequestWrapper((Request)request);
 	}
 
 }

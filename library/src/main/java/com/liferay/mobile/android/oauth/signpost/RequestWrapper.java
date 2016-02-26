@@ -27,9 +27,9 @@ import oauth.signpost.http.HttpRequest;
 /**
  * @author Javier Gamarra
  */
-public class HttpRequestAdapter implements HttpRequest {
+public class RequestWrapper implements HttpRequest {
 
-	public HttpRequestAdapter(Request request) {
+	public RequestWrapper(Request request) {
 		this.request = request;
 	}
 

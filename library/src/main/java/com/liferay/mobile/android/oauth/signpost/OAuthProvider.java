@@ -28,14 +28,12 @@ import oauth.signpost.http.HttpResponse;
 /**
  * @author Javier Gamarra
  */
-public class RequestOAuthProvider extends AbstractOAuthProvider {
+public class OAuthProvider extends AbstractOAuthProvider {
 
-	public RequestOAuthProvider(
+	public OAuthProvider(
 		String requestURL, String accessURL, String authorizeURL) {
 
 		super(requestURL, accessURL, authorizeURL);
-
-		client = new OkHttpClientImpl();
 	}
 
 	@Override
@@ -44,14 +42,14 @@ public class RequestOAuthProvider extends AbstractOAuthProvider {
 			Method.GET, new HashMap<String, String>(), endpointURL, null,
 			15000);
 
-		return new HttpRequestAdapter(request);
+		return new RequestWrapper(request);
 	}
 
 	@Override
 	protected HttpResponse sendRequest(HttpRequest request) throws Exception {
-		return new HttpResponseAdapter(client.send((Request)request.unwrap()));
+		return new ResponseWrapper(client.send((Request)request.unwrap()));
 	}
 
-	protected transient HttpClient client;
+	protected transient HttpClient client = new OkHttpClientImpl();
 
 }
