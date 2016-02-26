@@ -28,6 +28,7 @@ public class HttpResponseAdapter implements oauth.signpost.http.HttpResponse {
 		this.response = response;
 	}
 
+	@Override
 	public InputStream getContent() throws IOException {
 		try {
 			return response.getBodyAsStream();
@@ -37,18 +38,21 @@ public class HttpResponseAdapter implements oauth.signpost.http.HttpResponse {
 		}
 	}
 
+	@Override
 	public String getReasonPhrase() throws Exception {
 		return null;
 	}
 
+	@Override
 	public int getStatusCode() throws IOException {
 		return response.getStatusCode();
 	}
 
+	@Override
 	public Object unwrap() {
 		return response;
 	}
 
-	private Response response;
+	protected Response response;
 
 }

@@ -22,19 +22,23 @@ import java.io.InputStream;
 
 import java.util.Map;
 
+import oauth.signpost.http.HttpRequest;
+
 /**
  * @author Javier Gamarra
  */
-public class HttpRequestAdapter implements oauth.signpost.http.HttpRequest {
+public class HttpRequestAdapter implements HttpRequest {
 
 	public HttpRequestAdapter(Request request) {
 		this.request = request;
 	}
 
+	@Override
 	public Map<String, String> getAllHeaders() {
 		return request.getHeaders();
 	}
 
+	@Override
 	public String getContentType() {
 		if (request.getBody() == null) {
 			return null;
@@ -43,16 +47,12 @@ public class HttpRequestAdapter implements oauth.signpost.http.HttpRequest {
 		return "application/json";
 	}
 
+	@Override
 	public String getHeader(String name) {
-		String header = request.getHeaders().get(name);
-
-		if (header == null) {
-			return null;
-		}
-
-		return header;
+		return request.getHeaders().get(name);
 	}
 
+	@Override
 	public InputStream getMessagePayload() throws IOException {
 		if (request.getBody() == null) {
 			return null;
@@ -61,26 +61,31 @@ public class HttpRequestAdapter implements oauth.signpost.http.HttpRequest {
 		return new ByteArrayInputStream(((String)request.getBody()).getBytes());
 	}
 
+	@Override
 	public String getMethod() {
 		return String.valueOf(request.getMethod());
 	}
 
+	@Override
 	public String getRequestUrl() {
 		return request.getURL();
 	}
 
+	@Override
 	public void setHeader(String name, String value) {
 		request.getHeaders().put(name, value);
 	}
 
+	@Override
 	public void setRequestUrl(String url) {
 		request.setURL(url);
 	}
 
+	@Override
 	public Object unwrap() {
 		return request;
 	}
 
-	private Request request;
+	protected Request request;
 
 }

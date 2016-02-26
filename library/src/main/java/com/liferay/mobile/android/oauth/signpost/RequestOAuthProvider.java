@@ -52,6 +52,6 @@ public class RequestOAuthProvider extends AbstractOAuthProvider {
 		return new HttpResponseAdapter(client.send((Request)request.unwrap()));
 	}
 
-	private transient HttpClient client;
+	protected transient HttpClient client;
 
 }
