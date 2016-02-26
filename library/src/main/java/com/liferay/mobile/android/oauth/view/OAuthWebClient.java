@@ -38,13 +38,13 @@ public class OAuthWebClient extends WebViewClient {
 		if (URL.contains(OAuthWebView.OAUTH_TOKEN) &&
 			webView.isGrantAutomatically()) {
 
-			String javascript = "javascript:(function(){" +
-				"document.getElementById('" + OAUTH_PORTLET_FORM_ID +
-				"').submit();})()";
+			StringBuilder sb = new StringBuilder();
+			sb.append("javascript:(function(){");
+			sb.append("document.getElementById('");
+			sb.append(OAUTH_PORTLET_FORM_ID);
+			sb.append("').submit();})()");
 
-			webView.loadUrl(javascript);
-
-			return;
+			webView.loadUrl(sb.toString());
 		}
 	}
 

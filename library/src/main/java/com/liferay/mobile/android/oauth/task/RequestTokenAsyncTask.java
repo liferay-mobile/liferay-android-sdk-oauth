@@ -15,6 +15,7 @@
 package com.liferay.mobile.android.oauth.task;
 
 import android.os.AsyncTask;
+
 import android.util.Log;
 
 import com.liferay.mobile.android.oauth.OAuthConfig;

@@ -56,8 +56,7 @@ public class OAuthConfig implements Serializable {
 
 	public AbstractOAuthConsumer getConsumer() {
 		if (_consumer == null) {
-			_consumer = new RequestOAuthConsumer(
-				_consumerKey, _consumerSecret);
+			_consumer = new RequestOAuthConsumer(_consumerKey, _consumerSecret);
 		}
 
 		return _consumer;
