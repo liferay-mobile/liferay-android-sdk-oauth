@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.mobile.android.oauth.signpost.adapter;
+package com.liferay.mobile.android.oauth.signpost;
 
 import com.liferay.mobile.android.http.Request;
 

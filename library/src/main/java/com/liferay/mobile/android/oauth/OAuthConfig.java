@@ -16,8 +16,8 @@ package com.liferay.mobile.android.oauth;
 
 import android.net.Uri;
 
-import com.liferay.mobile.android.oauth.signpost.adapter.RequestOAuthConsumer;
-import com.liferay.mobile.android.oauth.signpost.adapter.RequestOAuthProvider;
+import com.liferay.mobile.android.oauth.signpost.RequestOAuthConsumer;
+import com.liferay.mobile.android.oauth.signpost.RequestOAuthProvider;
 
 import java.io.Serializable;
 
