@@ -38,9 +38,11 @@ public class OAuthProvider extends AbstractOAuthProvider {
 
 	@Override
 	protected HttpRequest createRequest(String endpointURL) throws Exception {
+		HashMap map = new HashMap<String, String>();
+		map.put("Accept-Encoding", "*");
+
 		Request request = new Request(
-			Method.GET, new HashMap<String, String>(), endpointURL, null,
-			15000);
+			Method.GET, map, endpointURL, null, 15000);
 
 		return new RequestWrapper(request);
 	}
