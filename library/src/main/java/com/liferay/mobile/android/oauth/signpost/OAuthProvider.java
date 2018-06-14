@@ -21,6 +21,7 @@ import com.liferay.mobile.android.http.client.OkHttpClientImpl;
 
 import java.util.HashMap;
 
+import java.util.Map;
 import oauth.signpost.AbstractOAuthProvider;
 import oauth.signpost.http.HttpRequest;
 import oauth.signpost.http.HttpResponse;
@@ -38,8 +39,8 @@ public class OAuthProvider extends AbstractOAuthProvider {
 
 	@Override
 	protected HttpRequest createRequest(String endpointURL) throws Exception {
-		HashMap map = new HashMap<String, String>();
-		map.put("Accept-Encoding", "*");
+		Map<String, String> map = new HashMap<>();
+		map.put("Accept-Encoding","*");
 
 		Request request = new Request(
 			Method.GET, map, endpointURL, null, 15000);
