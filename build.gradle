@@ -38,7 +38,7 @@ configure(subprojects.findAll { it.name.startsWith('sample') }) {
 
 	android {
 		compileSdkVersion 21
-		buildToolsVersion '21.1.1'
+		buildToolsVersion '26.0.2'
 
 		packagingOptions {
 			exclude 'META-INF/DEPENDENCIES'

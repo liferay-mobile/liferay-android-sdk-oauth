@@ -9,5 +9,5 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 	}
-	buildToolsVersion '25.0.0'
+	buildToolsVersion '26.0.2'
 }
