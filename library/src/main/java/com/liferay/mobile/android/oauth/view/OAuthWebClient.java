@@ -59,6 +59,7 @@ public class OAuthWebClient extends WebViewClient {
 		}
 
 		if (URL.startsWith(callbackURL)) {
+			webView.onLoadPage(Page.GRANTED);
 			webView.onCallbackURL(Uri.parse(URL));
 
 			return false;
